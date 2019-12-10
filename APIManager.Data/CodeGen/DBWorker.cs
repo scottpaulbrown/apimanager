@@ -75,40 +75,45 @@ namespace APIManager.Data.CodeGen {
             // look for new columns
             var newCols = revision.FieldChanges.Where(fc => fc.FieldChangeTypeCode == FieldChangeTypes.Add).ToList();
             if (newCols.Count > 0) {
-                string newColPartOne = string.Empty;
-                string newColPartTwo = string.Empty;
-                string newColPartThree = string.Empty;
-                Dictionary<string, List<EntityField>> updateFields = new Dictionary<string, List<EntityField>>();
-                foreach (var newCol in newCols) {
-                    string entityName = newCol.EntityField.Entity.EntityName;
-                    // see if the enitty is new or not
-                    if (newCol.EntityField.Entity.StatusCode == EntityStatusCodes.Active && newCol.EntityField.IsRequired) {
-                        // since this table already exists and this field is marked as required, first we need to 
-                        // add is as a nullable, set the value, then change it to a non nullable
-                        newColPartOne += GenerateNewColumnScript(entityName, newCol.EntityField, true);
-                        // now add to the fields for the update statement
-                        if (!updateFields.ContainsKey(entityName)) {
-                            updateFields.Add(entityName, new List<EntityField>());
-                        }
+                // create the new column up script
+                newColUpScript = GenerateFullNewColumnsScript(newCols);
+                // add to the down script
+                newCols.ForEach(c => newColDownScript += GenerateDropColumnScript(c.EntityField.Entity.EntityName, c.EntityField));
 
-                        updateFields[entityName].Add(newCol.EntityField);
-                    }
+                //string newColPartOne = string.Empty;
+                //string newColPartTwo = string.Empty;
+                //string newColPartThree = string.Empty;
+                //Dictionary<string, List<EntityField>> updateFields = new Dictionary<string, List<EntityField>>();
+                //foreach (var newCol in newCols) {
+                //    string entityName = newCol.EntityField.Entity.EntityName;
+                //    // see if the enitty is new or not
+                //    if (newCol.EntityField.Entity.StatusCode == EntityStatusCodes.Active && newCol.EntityField.IsRequired) {
+                //        // since this table already exists and this field is marked as required, first we need to 
+                //        // add is as a nullable, set the value, then change it to a non nullable
+                //        newColPartOne += GenerateNewColumnScript(entityName, newCol.EntityField, true);
+                //        // now add to the fields for the update statement
+                //        if (!updateFields.ContainsKey(entityName)) {
+                //            updateFields.Add(entityName, new List<EntityField>());
+                //        }
 
-                    newColPartThree += GenerateNewColumnScript(entityName, newCol.EntityField);
-                    newColDownScript += GenerateDropColumnScript(entityName, newCol.EntityField);
-                    changeCount++;
-                }
+                //        updateFields[entityName].Add(newCol.EntityField);
+                //    }
 
-                // see if an update script is needed
-                if (updateFields.Count > 0) {
-                    foreach (var key in updateFields.Keys) {
-                        newColPartTwo += CreateColumnUpdateScript(key, updateFields[key]);
-                    }
-                }
+                //    newColPartThree += GenerateNewColumnScript(entityName, newCol.EntityField);
+                //    newColDownScript += GenerateDropColumnScript(entityName, newCol.EntityField);
+                //    changeCount++;
+                //}
 
-                newColUpScript = GetWithLFIfNotNull(newColPartOne);
-                newColUpScript += GetWithLFIfNotNull(newColPartTwo);
-                newColUpScript += GetWithLFIfNotNull(newColPartThree);
+                //// see if an update script is needed
+                //if (updateFields.Count > 0) {
+                //    foreach (var key in updateFields.Keys) {
+                //        newColPartTwo += CreateColumnUpdateScript(key, updateFields[key]);
+                //    }
+                //}
+
+                //newColUpScript = GetWithLFIfNotNull(newColPartOne);
+                //newColUpScript += GetWithLFIfNotNull(newColPartTwo);
+                //newColUpScript += GetWithLFIfNotNull(newColPartThree);
             }
 
             // look for new relationships
@@ -243,6 +248,43 @@ CREATE TABLE [{table-name}] (
             string keyTable = link.PrimaryKeyField.Entity.EntityName;
             string sql = $"ALTER TABLE [{table}] DROP CONSTRAINT [FK_{table}_{keyTable}];";
             return sql;
+        }
+
+        public string GenerateFullNewColumnsScript(List<FieldChange> newCols) {
+            string script = string.Empty;
+            string newColPartOne = string.Empty;
+            string newColPartTwo = string.Empty;
+            string newColPartThree = string.Empty;
+            Dictionary<string, List<EntityField>> updateFields = new Dictionary<string, List<EntityField>>();
+            foreach (var newCol in newCols) {
+                string entityName = newCol.EntityField.Entity.EntityName;
+                // see if the enitty is new or not
+                if (newCol.EntityField.Entity.StatusCode == EntityStatusCodes.Active && newCol.EntityField.IsRequired) {
+                    // since this table already exists and this field is marked as required, first we need to 
+                    // add is as a nullable, set the value, then change it to a non nullable
+                    newColPartOne += GenerateNewColumnScript(entityName, newCol.EntityField, true);
+                    // now add to the fields for the update statement
+                    if (!updateFields.ContainsKey(entityName)) {
+                        updateFields.Add(entityName, new List<EntityField>());
+                    }
+
+                    updateFields[entityName].Add(newCol.EntityField);
+                }
+
+                newColPartThree += GenerateNewColumnScript(entityName, newCol.EntityField);
+            }
+
+            // see if an update script is needed
+            if (updateFields.Count > 0) {
+                foreach (var key in updateFields.Keys) {
+                    newColPartTwo += CreateColumnUpdateScript(key, updateFields[key]);
+                }
+            }
+
+            script = GetWithLFIfNotNull(newColPartOne);
+            script += GetWithLFIfNotNull(newColPartTwo);
+            script += GetWithLFIfNotNull(newColPartThree);
+            return script;
         }
 
         public string GetFullDataType(EntityField field) {
