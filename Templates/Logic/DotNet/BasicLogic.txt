@@ -1,0 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using {{dotnet_project_namespace}}.Logic.General;
+using {{dotnet_project_namespace}}.Logic.Model;
+using Microsoft.EntityFrameworkCore;
+
+namespace {{dotnet_project_namespace}}.Logic.{{entity_name}}Data {
+    public class {{entity_name}}Logic
+    {        
+        AppData _appData;
+
+        public {{entity_name}}Logic(AppData data)
+        {
+            _appData = data;
+        }
+
+        public async Task<List<{{entity_name}}>> Search({{entity_name}}SearchCriteria crit)
+        {      
+            var query = GetBaseQuery();
+            var list = await query.Where(a =>
+<CustomVariable tag="entity_field_list" isSearchField="true" tabs="4">
+    <Seperator> &amp;&amp;{{nl}}</Seperator>
+	<Template>({{version}})</Template>
+	<Versions>
+		<TemplateVersion dataType="string" isContainsSearch="true">string.IsNullOrEmpty(crit.{{entity_field_name}}) || crit.{{entity_field_name}}.ToUpper().Trim().Contains(crit.{{entity_field_name}}.ToUpper().Trim())</TemplateVersion>
+		<TemplateVersion dataType="string">string.IsNullOrEmpty(crit.{{entity_field_name}}) || crit.{{entity_field_name}}.ToUpper().Trim() == crit.{{entity_field_name}}.ToUpper().Trim()</TemplateVersion>
+		<TemplateVersion isDefault="true">crit.{{entity_field_name}} == null || crit.{{entity_field_name}} == crit.{{entity_field_name}}</TemplateVersion>
+	</Versions>
+</CustomVariable>
+				).ToListAsync();
+
+            return list;
+        }
+
+        public async Task<{{entity_name}}> GetById(int id)
+        {
+            // try to find the participant
+            var query = GetBaseQuery();
+            var list = await query.Where(p => p.{{entity_name}}Id == id).ToListAsync();
+            if (list.Count > 0)
+            {
+                var p = list[0];                
+                return p;
+            }
+            else
+            {
+                throw new RecordNotFoundException();
+            }
+        }
+
+        private IQueryable<{{entity_name}}> GetBaseQuery()
+        {
+            return _appData.Context.{{entity_name}};
+        }
+
+        public async Task Create({{entity_name}} obj)
+        {            
+            _appData.Context.{{entity_name}}.Add(obj);
+
+			try {
+				await _appData.Context.SaveChangesAsync();
+			} catch (Exception ex) {
+				throw;
+			}
+        }
+
+        public async Task Update({{entity_name}} obj)
+        {
+			// get the database version of this object
+            var list = await _appData.Context.{{entity_name}}.Where(a => a.{{entity_name}}Id == obj.{{entity_name}}Id).ToListAsync();
+            if (list.Count == 0) {
+                throw new RecordNotFoundException();
+            }
+
+            var cur = list[0];
+<CustomVariable tag="entity_field_list" isDTOField="true" tabs="3">
+    <Seperator>{{nl}}</Seperator>
+	<Template>cur.{{entity_field_name}} = obj.{{entity_field_name}};</Template>
+</CustomVariable>
+
+            // get the current version of the object
+			try {
+				await _appData.Context.SaveChangesAsync();
+			} catch (Exception ex) {
+				throw;
+			}
+        }
+
+        public async Task Delete(int id) {
+            var list = await _appData.Context.{{entity_name}}.Where(p => p.{{entity_name}}Id == id).ToListAsync();
+            if (list.Count > 0) {
+                _appData.Context.{{entity_name}}.Remove(list[0]);
+
+				try {
+					await _appData.Context.SaveChangesAsync();
+				} catch (Exception ex) {
+					throw;
+				}
+            } else {
+                throw new RecordNotFoundException();
+            }
+        }
+    }
+}

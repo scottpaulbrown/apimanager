@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using {{dotnet_project_namespace}}.Logic;
+using {{dotnet_project_namespace}}.Logic.{{entity_name}}Data;
+using {{dotnet_project_namespace}}.Logic.DTO;
+using {{dotnet_project_namespace}}.Logic.General;
+using {{dotnet_project_namespace}}.Logic.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace {{dotnet_project_namespace}}.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController, Authorize]
+    public class {{entity_name}}sController : ControllerBase
+    {
+        private IMapper _mapper;
+        private {{entity_name}}Logic _logic;
+
+        public {{entity_name}}sController(DBContext dbContext, IMapper mapper)
+        {
+            _mapper = mapper;
+            var data = new AppData(dbContext);
+            _logic = new {{entity_name}}Logic(data);
+        }
+       
+        [HttpGet]
+        public async Task<IActionResult> Get{{entity_name}}s([FromQuery]{{entity_name}}SearchCriteria searchCriteria)
+        {
+            var results = await _logic.Search(searchCriteria);
+            var resultsDTO = _mapper.Map<List<{{entity_name}}DTO>>(results);
+            return Ok(resultsDTO);        
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get{{entity_name}}ById(int id) {
+            var obj = await _logic.GetById(id);
+            var dto = _mapper.Map<{{entity_name}}DTO>(obj);
+            return Ok(dto);
+        }
+
+        [HttpPost] 
+        public async Task<IActionResult> Create{{entity_name}}({{entity_name}}DTO {{entity_name_lower}}) {
+            var obj = _mapper.Map<{{entity_name}}>({{entity_name_lower}});
+            await _logic.Create(obj);
+            var dto = _mapper.Map<{{entity_name}}DTO>(obj);
+            return Ok(dto);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update{{entity_name}}({{entity_name}}DTO {{entity_name_lower}}) {
+            var obj = _mapper.Map<{{entity_name}}>({{entity_name_lower}});
+            await _logic.Update(obj);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id) {            
+            await _logic.Delete(id);            
+            return Ok();
+        }
+    }
+}

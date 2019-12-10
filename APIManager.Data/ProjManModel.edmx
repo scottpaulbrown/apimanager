@@ -1,0 +1,1136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ProjManModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DataType">
+          <Key>
+            <PropertyRef Name="DataTypeCode" />
+          </Key>
+          <Property Name="DataTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="DataTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Entity">
+          <Key>
+            <PropertyRef Name="EntityId" />
+          </Key>
+          <Property Name="EntityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="EntityName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StatusCode" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EntityChange">
+          <Key>
+            <PropertyRef Name="EntityChangeId" />
+          </Key>
+          <Property Name="EntityChangeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RevisionId" Type="int" Nullable="false" />
+          <Property Name="EntityId" Type="int" Nullable="false" />
+          <Property Name="ChangeTypeCode" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="NewName" Type="varchar" MaxLength="50" />
+          <Property Name="OldName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="EntityField">
+          <Key>
+            <PropertyRef Name="EntityFieldId" />
+          </Key>
+          <Property Name="EntityFieldId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EntityId" Type="int" Nullable="false" />
+          <Property Name="FieldName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Datatype" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Scale" Type="int" />
+          <Property Name="MaxLength" Type="int" />
+          <Property Name="IsRequired" Type="bit" Nullable="false" />
+          <Property Name="IsSearchField" Type="bit" Nullable="false" />
+          <Property Name="IsContainsSearch" Type="bit" Nullable="false" />
+          <Property Name="IsKey" Type="bit" Nullable="false" />
+          <Property Name="IsIdentity" Type="bit" Nullable="false" />
+          <Property Name="IsDTO" Type="bit" Nullable="false" />
+          <Property Name="StatusCode" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="InitialValue" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="EntityLink">
+          <Key>
+            <PropertyRef Name="EntityLinkId" />
+          </Key>
+          <Property Name="EntityLinkId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PrimaryKeyFieldId" Type="int" Nullable="false" />
+          <Property Name="ForeignKeyFieldId" Type="int" Nullable="false" />
+          <Property Name="LinkTypeCode" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="StatusCode" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EnvironmentType">
+          <Key>
+            <PropertyRef Name="EnvironmentTypeCode" />
+          </Key>
+          <Property Name="EnvironmentTypeCode" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="EnvironmentTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FieldChange">
+          <Key>
+            <PropertyRef Name="FieldChangeId" />
+          </Key>
+          <Property Name="FieldChangeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EntityFieldId" Type="int" Nullable="false" />
+          <Property Name="RevisionId" Type="int" Nullable="false" />
+          <Property Name="FieldChangeTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="NewValue" Type="varchar" MaxLength="100" />
+          <Property Name="OldValue" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="FieldChangeType">
+          <Key>
+            <PropertyRef Name="FieldChangeTypeCode" />
+          </Key>
+          <Property Name="FieldChangeTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="FieldChangeTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LinkChange">
+          <Key>
+            <PropertyRef Name="LinkChangeId" />
+          </Key>
+          <Property Name="LinkChangeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RevisionId" Type="int" Nullable="false" />
+          <Property Name="EntityLinkId" Type="int" Nullable="false" />
+          <Property Name="ChangeTypeCode" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LinkType">
+          <Key>
+            <PropertyRef Name="LinkTypeCode" />
+          </Key>
+          <Property Name="LinkTypeCode" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="LinkTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PathType">
+          <Key>
+            <PropertyRef Name="PathTypeCode" />
+          </Key>
+          <Property Name="PathTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="PathTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ProjectId" />
+          </Key>
+          <Property Name="ProjectId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DotNetNamespace" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProjectDatabase">
+          <Key>
+            <PropertyRef Name="ProjectDatabaeId" />
+          </Key>
+          <Property Name="ProjectDatabaeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="EnvironmentTypeCode" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="ServerName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="DatabaseName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProjectPath">
+          <Key>
+            <PropertyRef Name="ProjectPathId" />
+          </Key>
+          <Property Name="ProjectPathId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="PathTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Path" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Revision">
+          <Key>
+            <PropertyRef Name="RevisionId" />
+          </Key>
+          <Property Name="RevisionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" Nullable="false" />
+          <Property Name="RevisionName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BeginDate" Type="datetime" Nullable="false" />
+          <Property Name="CommitDate" Type="datetime" />
+          <Property Name="RevisionStatusCode" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="ScriptFilename" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Entity_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="Entity" Type="Self.Entity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="Entity">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityChange_Entity">
+          <End Role="Entity" Type="Self.Entity" Multiplicity="1" />
+          <End Role="EntityChange" Type="Self.EntityChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Entity">
+              <PropertyRef Name="EntityId" />
+            </Principal>
+            <Dependent Role="EntityChange">
+              <PropertyRef Name="EntityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityChange_Revision">
+          <End Role="Revision" Type="Self.Revision" Multiplicity="1" />
+          <End Role="EntityChange" Type="Self.EntityChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="RevisionId" />
+            </Principal>
+            <Dependent Role="EntityChange">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityField_Entity">
+          <End Role="Entity" Type="Self.Entity" Multiplicity="1" />
+          <End Role="EntityField" Type="Self.EntityField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Entity">
+              <PropertyRef Name="EntityId" />
+            </Principal>
+            <Dependent Role="EntityField">
+              <PropertyRef Name="EntityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityLink_EntityField">
+          <End Role="EntityField" Type="Self.EntityField" Multiplicity="1" />
+          <End Role="EntityLink" Type="Self.EntityLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityField">
+              <PropertyRef Name="EntityFieldId" />
+            </Principal>
+            <Dependent Role="EntityLink">
+              <PropertyRef Name="PrimaryKeyFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityLink_EntityField1">
+          <End Role="EntityField" Type="Self.EntityField" Multiplicity="1" />
+          <End Role="EntityLink" Type="Self.EntityLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityField">
+              <PropertyRef Name="EntityFieldId" />
+            </Principal>
+            <Dependent Role="EntityLink">
+              <PropertyRef Name="ForeignKeyFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityLink_LinkType">
+          <End Role="LinkType" Type="Self.LinkType" Multiplicity="1" />
+          <End Role="EntityLink" Type="Self.EntityLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LinkType">
+              <PropertyRef Name="LinkTypeCode" />
+            </Principal>
+            <Dependent Role="EntityLink">
+              <PropertyRef Name="LinkTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FieldChange_EntityField">
+          <End Role="EntityField" Type="Self.EntityField" Multiplicity="1" />
+          <End Role="FieldChange" Type="Self.FieldChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityField">
+              <PropertyRef Name="EntityFieldId" />
+            </Principal>
+            <Dependent Role="FieldChange">
+              <PropertyRef Name="EntityFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FieldChange_FieldChangeType">
+          <End Role="FieldChangeType" Type="Self.FieldChangeType" Multiplicity="1" />
+          <End Role="FieldChange" Type="Self.FieldChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FieldChangeType">
+              <PropertyRef Name="FieldChangeTypeCode" />
+            </Principal>
+            <Dependent Role="FieldChange">
+              <PropertyRef Name="FieldChangeTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FieldChange_Revision">
+          <End Role="Revision" Type="Self.Revision" Multiplicity="1" />
+          <End Role="FieldChange" Type="Self.FieldChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="RevisionId" />
+            </Principal>
+            <Dependent Role="FieldChange">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LinkChange_EntityLink">
+          <End Role="EntityLink" Type="Self.EntityLink" Multiplicity="1" />
+          <End Role="LinkChange" Type="Self.LinkChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityLink">
+              <PropertyRef Name="EntityLinkId" />
+            </Principal>
+            <Dependent Role="LinkChange">
+              <PropertyRef Name="EntityLinkId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LinkChange_Revision">
+          <End Role="Revision" Type="Self.Revision" Multiplicity="1" />
+          <End Role="LinkChange" Type="Self.LinkChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="RevisionId" />
+            </Principal>
+            <Dependent Role="LinkChange">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectDatabase_ConnectionType">
+          <End Role="EnvironmentType" Type="Self.EnvironmentType" Multiplicity="1" />
+          <End Role="ProjectDatabase" Type="Self.ProjectDatabase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnvironmentType">
+              <PropertyRef Name="EnvironmentTypeCode" />
+            </Principal>
+            <Dependent Role="ProjectDatabase">
+              <PropertyRef Name="EnvironmentTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectDatabase_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="ProjectDatabase" Type="Self.ProjectDatabase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectDatabase">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectPath_PathType">
+          <End Role="PathType" Type="Self.PathType" Multiplicity="1" />
+          <End Role="ProjectPath" Type="Self.ProjectPath" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PathType">
+              <PropertyRef Name="PathTypeCode" />
+            </Principal>
+            <Dependent Role="ProjectPath">
+              <PropertyRef Name="PathTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectPath_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="ProjectPath" Type="Self.ProjectPath" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectPath">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Revision_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="Revision" Type="Self.Revision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="Revision">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProjManModelStoreContainer">
+          <EntitySet Name="DataType" EntityType="Self.DataType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Entity" EntityType="Self.Entity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntityChange" EntityType="Self.EntityChange" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntityField" EntityType="Self.EntityField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntityLink" EntityType="Self.EntityLink" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EnvironmentType" EntityType="Self.EnvironmentType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FieldChange" EntityType="Self.FieldChange" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FieldChangeType" EntityType="Self.FieldChangeType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LinkChange" EntityType="Self.LinkChange" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LinkType" EntityType="Self.LinkType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PathType" EntityType="Self.PathType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectDatabase" EntityType="Self.ProjectDatabase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectPath" EntityType="Self.ProjectPath" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Revision" EntityType="Self.Revision" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Entity_Project" Association="Self.FK_Entity_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="Entity" EntitySet="Entity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityChange_Entity" Association="Self.FK_EntityChange_Entity">
+            <End Role="Entity" EntitySet="Entity" />
+            <End Role="EntityChange" EntitySet="EntityChange" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityChange_Revision" Association="Self.FK_EntityChange_Revision">
+            <End Role="Revision" EntitySet="Revision" />
+            <End Role="EntityChange" EntitySet="EntityChange" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityField_Entity" Association="Self.FK_EntityField_Entity">
+            <End Role="Entity" EntitySet="Entity" />
+            <End Role="EntityField" EntitySet="EntityField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityLink_EntityField" Association="Self.FK_EntityLink_EntityField">
+            <End Role="EntityField" EntitySet="EntityField" />
+            <End Role="EntityLink" EntitySet="EntityLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityLink_EntityField1" Association="Self.FK_EntityLink_EntityField1">
+            <End Role="EntityField" EntitySet="EntityField" />
+            <End Role="EntityLink" EntitySet="EntityLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityLink_LinkType" Association="Self.FK_EntityLink_LinkType">
+            <End Role="LinkType" EntitySet="LinkType" />
+            <End Role="EntityLink" EntitySet="EntityLink" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FieldChange_EntityField" Association="Self.FK_FieldChange_EntityField">
+            <End Role="EntityField" EntitySet="EntityField" />
+            <End Role="FieldChange" EntitySet="FieldChange" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FieldChange_FieldChangeType" Association="Self.FK_FieldChange_FieldChangeType">
+            <End Role="FieldChangeType" EntitySet="FieldChangeType" />
+            <End Role="FieldChange" EntitySet="FieldChange" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FieldChange_Revision" Association="Self.FK_FieldChange_Revision">
+            <End Role="Revision" EntitySet="Revision" />
+            <End Role="FieldChange" EntitySet="FieldChange" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LinkChange_EntityLink" Association="Self.FK_LinkChange_EntityLink">
+            <End Role="EntityLink" EntitySet="EntityLink" />
+            <End Role="LinkChange" EntitySet="LinkChange" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LinkChange_Revision" Association="Self.FK_LinkChange_Revision">
+            <End Role="Revision" EntitySet="Revision" />
+            <End Role="LinkChange" EntitySet="LinkChange" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectDatabase_ConnectionType" Association="Self.FK_ProjectDatabase_ConnectionType">
+            <End Role="EnvironmentType" EntitySet="EnvironmentType" />
+            <End Role="ProjectDatabase" EntitySet="ProjectDatabase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectDatabase_Project" Association="Self.FK_ProjectDatabase_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectDatabase" EntitySet="ProjectDatabase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectPath_PathType" Association="Self.FK_ProjectPath_PathType">
+            <End Role="PathType" EntitySet="PathType" />
+            <End Role="ProjectPath" EntitySet="ProjectPath" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectPath_Project" Association="Self.FK_ProjectPath_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectPath" EntitySet="ProjectPath" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Revision_Project" Association="Self.FK_Revision_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="Revision" EntitySet="Revision" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProjManModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Entity">
+          <Key>
+            <PropertyRef Name="EntityId" />
+          </Key>
+          <Property Name="EntityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="EntityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StatusCode" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Project" Relationship="Self.FK_Entity_Project" FromRole="Entity" ToRole="Project" />
+          <NavigationProperty Name="EntityFields" Relationship="Self.FK_EntityField_Entity" FromRole="Entity" ToRole="EntityField" />
+          <NavigationProperty Name="EntityChanges" Relationship="ProjManModel.FK_EntityChange_Entity" FromRole="Entity" ToRole="EntityChange" />
+        </EntityType>
+        <EntityType Name="EntityField">
+          <Key>
+            <PropertyRef Name="EntityFieldId" />
+          </Key>
+          <Property Name="EntityFieldId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EntityId" Type="Int32" Nullable="false" />
+          <Property Name="FieldName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Datatype" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Scale" Type="Int32" />
+          <Property Name="MaxLength" Type="Int32" />
+          <Property Name="IsRequired" Type="Boolean" Nullable="false" />
+          <Property Name="IsSearchField" Type="Boolean" Nullable="false" />
+          <Property Name="IsContainsSearch" Type="Boolean" Nullable="false" />
+          <Property Name="IsKey" Type="Boolean" Nullable="false" />
+          <Property Name="IsIdentity" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Entity" Relationship="Self.FK_EntityField_Entity" FromRole="EntityField" ToRole="Entity" />
+          <Property Name="StatusCode" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="ChildLinks" Relationship="ProjManModel.FK_EntityLink_EntityField" FromRole="EntityField" ToRole="EntityLink" />
+          <NavigationProperty Name="ParentLinks" Relationship="ProjManModel.FK_EntityLink_EntityField1" FromRole="EntityField" ToRole="EntityField1" />
+          <Property Name="IsDTO" Type="Boolean" Nullable="false" />
+          <Property Name="InitialValue" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="FieldChanges" Relationship="ProjManModel.FK_FieldChange_EntityField" FromRole="EntityField" ToRole="FieldChange" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ProjectId" />
+          </Key>
+          <Property Name="ProjectId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DotNetNamespace" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Entities" Relationship="Self.FK_Entity_Project" FromRole="Project" ToRole="Entity" />
+          <NavigationProperty Name="Revisions" Relationship="ProjManModel.FK_Revision_Project" FromRole="Project" ToRole="Revision" />
+          <NavigationProperty Name="ProjectPaths" Relationship="ProjManModel.FK_ProjectPath_Project" FromRole="Project" ToRole="ProjectPath" />
+          <NavigationProperty Name="ProjectDatabases" Relationship="ProjManModel.FK_ProjectDatabase_Project" FromRole="Project" ToRole="ProjectDatabase" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Entity_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="Entity" Type="Self.Entity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="Entity">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityField_Entity">
+          <End Role="Entity" Type="Self.Entity" Multiplicity="1" />
+          <End Role="EntityField" Type="Self.EntityField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Entity">
+              <PropertyRef Name="EntityId" />
+            </Principal>
+            <Dependent Role="EntityField">
+              <PropertyRef Name="EntityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProjManEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Entities" EntityType="Self.Entity" />
+          <EntitySet Name="EntityFields" EntityType="Self.EntityField" />
+          <EntitySet Name="Projects" EntityType="Self.Project" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_Entity_Project" Association="Self.FK_Entity_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Entity" EntitySet="Entities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityField_Entity" Association="Self.FK_EntityField_Entity">
+            <End Role="Entity" EntitySet="Entities" />
+            <End Role="EntityField" EntitySet="EntityFields" />
+          </AssociationSet>
+          <EntitySet Name="Revisions" EntityType="ProjManModel.Revision" />
+          <AssociationSet Name="FK_Revision_Project" Association="ProjManModel.FK_Revision_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="Revision" EntitySet="Revisions" />
+          </AssociationSet>
+          <EntitySet Name="PathTypes" EntityType="ProjManModel.PathType" />
+          <EntitySet Name="ProjectPaths" EntityType="ProjManModel.ProjectPath" />
+          <AssociationSet Name="FK_ProjectPath_PathType" Association="ProjManModel.FK_ProjectPath_PathType">
+            <End Role="PathType" EntitySet="PathTypes" />
+            <End Role="ProjectPath" EntitySet="ProjectPaths" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectPath_Project" Association="ProjManModel.FK_ProjectPath_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="ProjectPath" EntitySet="ProjectPaths" />
+          </AssociationSet>
+          <EntitySet Name="DataTypes" EntityType="ProjManModel.DataType" />
+          <EntitySet Name="EntityChanges" EntityType="ProjManModel.EntityChange" />
+          <AssociationSet Name="FK_EntityChange_Entity" Association="ProjManModel.FK_EntityChange_Entity">
+            <End Role="Entity" EntitySet="Entities" />
+            <End Role="EntityChange" EntitySet="EntityChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityChange_Revision" Association="ProjManModel.FK_EntityChange_Revision">
+            <End Role="Revision" EntitySet="Revisions" />
+            <End Role="EntityChange" EntitySet="EntityChanges" />
+          </AssociationSet>
+          <EntitySet Name="EntityLinks" EntityType="ProjManModel.EntityLink" />
+          <EntitySet Name="LinkTypes" EntityType="ProjManModel.LinkType" />
+          <AssociationSet Name="FK_EntityLink_EntityField" Association="ProjManModel.FK_EntityLink_EntityField">
+            <End Role="EntityField" EntitySet="EntityFields" />
+            <End Role="EntityLink" EntitySet="EntityLinks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityLink_EntityField1" Association="ProjManModel.FK_EntityLink_EntityField1">
+            <End Role="EntityField" EntitySet="EntityFields" />
+            <End Role="EntityField1" EntitySet="EntityLinks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EntityLink_LinkType" Association="ProjManModel.FK_EntityLink_LinkType">
+            <End Role="LinkType" EntitySet="LinkTypes" />
+            <End Role="EntityLink" EntitySet="EntityLinks" />
+          </AssociationSet>
+          <EntitySet Name="LinkChanges" EntityType="ProjManModel.LinkChange" />
+          <AssociationSet Name="FK_LinkChange_EntityLink" Association="ProjManModel.FK_LinkChange_EntityLink">
+            <End Role="EntityLink" EntitySet="EntityLinks" />
+            <End Role="LinkChange" EntitySet="LinkChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LinkChange_Revision" Association="ProjManModel.FK_LinkChange_Revision">
+            <End Role="Revision" EntitySet="Revisions" />
+            <End Role="LinkChange" EntitySet="LinkChanges" />
+          </AssociationSet>
+          <EntitySet Name="EnvironmentTypes" EntityType="ProjManModel.EnvironmentType" />
+          <EntitySet Name="ProjectDatabases" EntityType="ProjManModel.ProjectDatabase" />
+          <AssociationSet Name="FK_ProjectDatabase_ConnectionType" Association="ProjManModel.FK_ProjectDatabase_ConnectionType">
+            <End Role="EnvironmentType" EntitySet="EnvironmentTypes" />
+            <End Role="ProjectDatabase" EntitySet="ProjectDatabases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectDatabase_Project" Association="ProjManModel.FK_ProjectDatabase_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="ProjectDatabase" EntitySet="ProjectDatabases" />
+          </AssociationSet>
+          <EntitySet Name="FieldChanges" EntityType="ProjManModel.FieldChange" />
+          <EntitySet Name="FieldChangeTypes" EntityType="ProjManModel.FieldChangeType" />
+          <AssociationSet Name="FK_FieldChange_FieldChangeType" Association="ProjManModel.FK_FieldChange_FieldChangeType">
+            <End Role="FieldChangeType" EntitySet="FieldChangeTypes" />
+            <End Role="FieldChange" EntitySet="FieldChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FieldChange_EntityField" Association="ProjManModel.FK_FieldChange_EntityField">
+            <End Role="EntityField" EntitySet="EntityFields" />
+            <End Role="FieldChange" EntitySet="FieldChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FieldChange_Revision" Association="ProjManModel.FK_FieldChange_Revision">
+            <End Role="Revision" EntitySet="Revisions" />
+            <End Role="FieldChange" EntitySet="FieldChanges" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Revision">
+          <Key>
+            <PropertyRef Name="RevisionId" />
+          </Key>
+          <Property Name="RevisionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="RevisionName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RevisionStatusCode" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Project" Relationship="ProjManModel.FK_Revision_Project" FromRole="Revision" ToRole="Project" />
+          <NavigationProperty Name="EntityChanges" Relationship="ProjManModel.FK_EntityChange_Revision" FromRole="Revision" ToRole="EntityChange" />
+          <Property Name="CommitDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="LinkChanges" Relationship="ProjManModel.FK_LinkChange_Revision" FromRole="Revision" ToRole="LinkChange" />
+          <NavigationProperty Name="FieldChanges" Relationship="ProjManModel.FK_FieldChange_Revision" FromRole="Revision" ToRole="FieldChange" />
+          <Property Name="ScriptFilename" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Revision_Project">
+          <End Type="ProjManModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="ProjManModel.Revision" Role="Revision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="Revision">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PathType">
+          <Key>
+            <PropertyRef Name="PathTypeCode" />
+          </Key>
+          <Property Name="PathTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="PathTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProjectPaths" Relationship="ProjManModel.FK_ProjectPath_PathType" FromRole="PathType" ToRole="ProjectPath" />
+        </EntityType>
+        <EntityType Name="ProjectPath">
+          <Key>
+            <PropertyRef Name="ProjectPathId" />
+          </Key>
+          <Property Name="ProjectPathId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="PathTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Path" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PathType" Relationship="ProjManModel.FK_ProjectPath_PathType" FromRole="ProjectPath" ToRole="PathType" />
+          <NavigationProperty Name="Project" Relationship="ProjManModel.FK_ProjectPath_Project" FromRole="ProjectPath" ToRole="Project" />
+        </EntityType>
+        <Association Name="FK_ProjectPath_PathType">
+          <End Type="ProjManModel.PathType" Role="PathType" Multiplicity="1" />
+          <End Type="ProjManModel.ProjectPath" Role="ProjectPath" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PathType">
+              <PropertyRef Name="PathTypeCode" />
+            </Principal>
+            <Dependent Role="ProjectPath">
+              <PropertyRef Name="PathTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectPath_Project">
+          <End Type="ProjManModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="ProjManModel.ProjectPath" Role="ProjectPath" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectPath">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DataType">
+          <Key>
+            <PropertyRef Name="DataTypeCode" />
+          </Key>
+          <Property Name="DataTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DataTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="EntityChange">
+          <Key>
+            <PropertyRef Name="EntityChangeId" />
+          </Key>
+          <Property Name="EntityChangeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RevisionId" Type="Int32" Nullable="false" />
+          <Property Name="EntityId" Type="Int32" Nullable="false" />
+          <Property Name="ChangeTypeCode" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NewName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OldName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Entity" Relationship="ProjManModel.FK_EntityChange_Entity" FromRole="EntityChange" ToRole="Entity" />
+          <NavigationProperty Name="Revision" Relationship="ProjManModel.FK_EntityChange_Revision" FromRole="EntityChange" ToRole="Revision" />
+        </EntityType>
+        <Association Name="FK_EntityChange_Entity">
+          <End Type="ProjManModel.Entity" Role="Entity" Multiplicity="1" />
+          <End Type="ProjManModel.EntityChange" Role="EntityChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Entity">
+              <PropertyRef Name="EntityId" />
+            </Principal>
+            <Dependent Role="EntityChange">
+              <PropertyRef Name="EntityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityChange_Revision">
+          <End Type="ProjManModel.Revision" Role="Revision" Multiplicity="1" />
+          <End Type="ProjManModel.EntityChange" Role="EntityChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="RevisionId" />
+            </Principal>
+            <Dependent Role="EntityChange">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EntityLink">
+          <Key>
+            <PropertyRef Name="EntityLinkId" />
+          </Key>
+          <Property Name="EntityLinkId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PrimaryKeyFieldId" Type="Int32" Nullable="false" />
+          <Property Name="ForeignKeyFieldId" Type="Int32" Nullable="false" />
+          <Property Name="LinkTypeCode" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="PrimaryKeyField" Relationship="ProjManModel.FK_EntityLink_EntityField" FromRole="EntityLink" ToRole="EntityField" />
+          <NavigationProperty Name="ForeignKeyField" Relationship="ProjManModel.FK_EntityLink_EntityField1" FromRole="EntityField1" ToRole="EntityField" />
+          <NavigationProperty Name="LinkType" Relationship="ProjManModel.FK_EntityLink_LinkType" FromRole="EntityLink" ToRole="LinkType" />
+          <Property Name="StatusCode" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="LinkChanges" Relationship="ProjManModel.FK_LinkChange_EntityLink" FromRole="EntityLink" ToRole="LinkChange" />
+        </EntityType>
+        <EntityType Name="LinkType">
+          <Key>
+            <PropertyRef Name="LinkTypeCode" />
+          </Key>
+          <Property Name="LinkTypeCode" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="LinkTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EntityLinks" Relationship="ProjManModel.FK_EntityLink_LinkType" FromRole="LinkType" ToRole="EntityLink" />
+        </EntityType>
+        <Association Name="FK_EntityLink_EntityField">
+          <End Type="ProjManModel.EntityField" Role="EntityField" Multiplicity="1" />
+          <End Type="ProjManModel.EntityLink" Role="EntityLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityField">
+              <PropertyRef Name="EntityFieldId" />
+            </Principal>
+            <Dependent Role="EntityLink">
+              <PropertyRef Name="PrimaryKeyFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityLink_EntityField1">
+          <End Type="ProjManModel.EntityField" Role="EntityField" Multiplicity="1" />
+          <End Type="ProjManModel.EntityLink" Role="EntityField1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityField">
+              <PropertyRef Name="EntityFieldId" />
+            </Principal>
+            <Dependent Role="EntityField1">
+              <PropertyRef Name="ForeignKeyFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EntityLink_LinkType">
+          <End Type="ProjManModel.LinkType" Role="LinkType" Multiplicity="1" />
+          <End Type="ProjManModel.EntityLink" Role="EntityLink" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LinkType">
+              <PropertyRef Name="LinkTypeCode" />
+            </Principal>
+            <Dependent Role="EntityLink">
+              <PropertyRef Name="LinkTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="LinkChange">
+          <Key>
+            <PropertyRef Name="LinkChangeId" />
+          </Key>
+          <Property Name="LinkChangeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RevisionId" Type="Int32" Nullable="false" />
+          <Property Name="EntityLinkId" Type="Int32" Nullable="false" />
+          <Property Name="ChangeTypeCode" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="EntityLink" Relationship="ProjManModel.FK_LinkChange_EntityLink" FromRole="LinkChange" ToRole="EntityLink" />
+          <NavigationProperty Name="Revision" Relationship="ProjManModel.FK_LinkChange_Revision" FromRole="LinkChange" ToRole="Revision" />
+        </EntityType>
+        <Association Name="FK_LinkChange_EntityLink">
+          <End Type="ProjManModel.EntityLink" Role="EntityLink" Multiplicity="1" />
+          <End Type="ProjManModel.LinkChange" Role="LinkChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityLink">
+              <PropertyRef Name="EntityLinkId" />
+            </Principal>
+            <Dependent Role="LinkChange">
+              <PropertyRef Name="EntityLinkId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LinkChange_Revision">
+          <End Type="ProjManModel.Revision" Role="Revision" Multiplicity="1" />
+          <End Type="ProjManModel.LinkChange" Role="LinkChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="RevisionId" />
+            </Principal>
+            <Dependent Role="LinkChange">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EnvironmentType">
+          <Key>
+            <PropertyRef Name="EnvironmentTypeCode" />
+          </Key>
+          <Property Name="EnvironmentTypeCode" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="EnvironmentTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProjectDatabases" Relationship="ProjManModel.FK_ProjectDatabase_ConnectionType" FromRole="EnvironmentType" ToRole="ProjectDatabase" />
+        </EntityType>
+        <EntityType Name="ProjectDatabase">
+          <Key>
+            <PropertyRef Name="ProjectDatabaeId" />
+          </Key>
+          <Property Name="ProjectDatabaeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" Nullable="false" />
+          <Property Name="EnvironmentTypeCode" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="ServerName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="DatabaseName" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EnvironmentType" Relationship="ProjManModel.FK_ProjectDatabase_ConnectionType" FromRole="ProjectDatabase" ToRole="EnvironmentType" />
+          <NavigationProperty Name="Project" Relationship="ProjManModel.FK_ProjectDatabase_Project" FromRole="ProjectDatabase" ToRole="Project" />
+        </EntityType>
+        <Association Name="FK_ProjectDatabase_ConnectionType">
+          <End Type="ProjManModel.EnvironmentType" Role="EnvironmentType" Multiplicity="1" />
+          <End Type="ProjManModel.ProjectDatabase" Role="ProjectDatabase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EnvironmentType">
+              <PropertyRef Name="EnvironmentTypeCode" />
+            </Principal>
+            <Dependent Role="ProjectDatabase">
+              <PropertyRef Name="EnvironmentTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectDatabase_Project">
+          <End Type="ProjManModel.Project" Role="Project" Multiplicity="1" />
+          <End Type="ProjManModel.ProjectDatabase" Role="ProjectDatabase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectDatabase">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FieldChange">
+          <Key>
+            <PropertyRef Name="FieldChangeId" />
+          </Key>
+          <Property Name="FieldChangeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EntityFieldId" Type="Int32" Nullable="false" />
+          <Property Name="FieldChangeTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="NewValue" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OldValue" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="FieldChangeType" Relationship="ProjManModel.FK_FieldChange_FieldChangeType" FromRole="FieldChange" ToRole="FieldChangeType" />
+          <NavigationProperty Name="EntityField" Relationship="ProjManModel.FK_FieldChange_EntityField" FromRole="FieldChange" ToRole="EntityField" />
+          <Property Name="RevisionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Revision" Relationship="ProjManModel.FK_FieldChange_Revision" FromRole="FieldChange" ToRole="Revision" />
+        </EntityType>
+        <EntityType Name="FieldChangeType">
+          <Key>
+            <PropertyRef Name="FieldChangeTypeCode" />
+          </Key>
+          <Property Name="FieldChangeTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="FieldChangeTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="FieldChanges" Relationship="ProjManModel.FK_FieldChange_FieldChangeType" FromRole="FieldChangeType" ToRole="FieldChange" />
+        </EntityType>
+        <Association Name="FK_FieldChange_FieldChangeType">
+          <End Type="ProjManModel.FieldChangeType" Role="FieldChangeType" Multiplicity="1" />
+          <End Type="ProjManModel.FieldChange" Role="FieldChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FieldChangeType">
+              <PropertyRef Name="FieldChangeTypeCode" />
+            </Principal>
+            <Dependent Role="FieldChange">
+              <PropertyRef Name="FieldChangeTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FieldChange_EntityField">
+          <End Type="ProjManModel.EntityField" Role="EntityField" Multiplicity="1" />
+          <End Type="ProjManModel.FieldChange" Role="FieldChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityField">
+              <PropertyRef Name="EntityFieldId" />
+            </Principal>
+            <Dependent Role="FieldChange">
+              <PropertyRef Name="EntityFieldId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FieldChange_Revision">
+          <End Type="ProjManModel.Revision" Role="Revision" Multiplicity="1" />
+          <End Type="ProjManModel.FieldChange" Role="FieldChange" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Revision">
+              <PropertyRef Name="RevisionId" />
+            </Principal>
+            <Dependent Role="FieldChange">
+              <PropertyRef Name="RevisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProjManModelStoreContainer" CdmEntityContainer="ProjManEntities">
+          <EntitySetMapping Name="Entities">
+            <EntityTypeMapping TypeName="ProjManModel.Entity">
+              <MappingFragment StoreEntitySet="Entity">
+                <ScalarProperty Name="EntityId" ColumnName="EntityId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="StatusCode" ColumnName="StatusCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntityFields">
+            <EntityTypeMapping TypeName="ProjManModel.EntityField">
+              <MappingFragment StoreEntitySet="EntityField">
+                <ScalarProperty Name="InitialValue" ColumnName="InitialValue" />
+                <ScalarProperty Name="IsDTO" ColumnName="IsDTO" />
+                <ScalarProperty Name="StatusCode" ColumnName="StatusCode" />
+                <ScalarProperty Name="EntityFieldId" ColumnName="EntityFieldId" />
+                <ScalarProperty Name="EntityId" ColumnName="EntityId" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="Datatype" ColumnName="Datatype" />
+                <ScalarProperty Name="Scale" ColumnName="Scale" />
+                <ScalarProperty Name="MaxLength" ColumnName="MaxLength" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="IsSearchField" ColumnName="IsSearchField" />
+                <ScalarProperty Name="IsContainsSearch" ColumnName="IsContainsSearch" />
+                <ScalarProperty Name="IsKey" ColumnName="IsKey" />
+                <ScalarProperty Name="IsIdentity" ColumnName="IsIdentity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Projects">
+            <EntityTypeMapping TypeName="ProjManModel.Project">
+              <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="DotNetNamespace" ColumnName="DotNetNamespace" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ProjManModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Revisions">
+            <EntityTypeMapping TypeName="ProjManModel.Revision">
+              <MappingFragment StoreEntitySet="Revision">
+                <ScalarProperty Name="ScriptFilename" ColumnName="ScriptFilename" />
+                <ScalarProperty Name="CommitDate" ColumnName="CommitDate" />
+                <ScalarProperty Name="RevisionStatusCode" ColumnName="RevisionStatusCode" />
+                <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
+                <ScalarProperty Name="RevisionName" ColumnName="RevisionName" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="RevisionId" ColumnName="RevisionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PathTypes">
+            <EntityTypeMapping TypeName="ProjManModel.PathType">
+              <MappingFragment StoreEntitySet="PathType">
+                <ScalarProperty Name="PathTypeName" ColumnName="PathTypeName" />
+                <ScalarProperty Name="PathTypeCode" ColumnName="PathTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectPaths">
+            <EntityTypeMapping TypeName="ProjManModel.ProjectPath">
+              <MappingFragment StoreEntitySet="ProjectPath">
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="PathTypeCode" ColumnName="PathTypeCode" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ProjectPathId" ColumnName="ProjectPathId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataTypes">
+            <EntityTypeMapping TypeName="ProjManModel.DataType">
+              <MappingFragment StoreEntitySet="DataType">
+                <ScalarProperty Name="DataTypeName" ColumnName="DataTypeName" />
+                <ScalarProperty Name="DataTypeCode" ColumnName="DataTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntityChanges">
+            <EntityTypeMapping TypeName="ProjManModel.EntityChange">
+              <MappingFragment StoreEntitySet="EntityChange">
+                <ScalarProperty Name="OldName" ColumnName="OldName" />
+                <ScalarProperty Name="NewName" ColumnName="NewName" />
+                <ScalarProperty Name="ChangeTypeCode" ColumnName="ChangeTypeCode" />
+                <ScalarProperty Name="EntityId" ColumnName="EntityId" />
+                <ScalarProperty Name="RevisionId" ColumnName="RevisionId" />
+                <ScalarProperty Name="EntityChangeId" ColumnName="EntityChangeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntityLinks">
+            <EntityTypeMapping TypeName="ProjManModel.EntityLink">
+              <MappingFragment StoreEntitySet="EntityLink">
+                <ScalarProperty Name="StatusCode" ColumnName="StatusCode" />
+                <ScalarProperty Name="LinkTypeCode" ColumnName="LinkTypeCode" />
+                <ScalarProperty Name="ForeignKeyFieldId" ColumnName="ForeignKeyFieldId" />
+                <ScalarProperty Name="PrimaryKeyFieldId" ColumnName="PrimaryKeyFieldId" />
+                <ScalarProperty Name="EntityLinkId" ColumnName="EntityLinkId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LinkTypes">
+            <EntityTypeMapping TypeName="ProjManModel.LinkType">
+              <MappingFragment StoreEntitySet="LinkType">
+                <ScalarProperty Name="LinkTypeName" ColumnName="LinkTypeName" />
+                <ScalarProperty Name="LinkTypeCode" ColumnName="LinkTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LinkChanges">
+            <EntityTypeMapping TypeName="ProjManModel.LinkChange">
+              <MappingFragment StoreEntitySet="LinkChange">
+                <ScalarProperty Name="ChangeTypeCode" ColumnName="ChangeTypeCode" />
+                <ScalarProperty Name="EntityLinkId" ColumnName="EntityLinkId" />
+                <ScalarProperty Name="RevisionId" ColumnName="RevisionId" />
+                <ScalarProperty Name="LinkChangeId" ColumnName="LinkChangeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EnvironmentTypes">
+            <EntityTypeMapping TypeName="ProjManModel.EnvironmentType">
+              <MappingFragment StoreEntitySet="EnvironmentType">
+                <ScalarProperty Name="EnvironmentTypeName" ColumnName="EnvironmentTypeName" />
+                <ScalarProperty Name="EnvironmentTypeCode" ColumnName="EnvironmentTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectDatabases">
+            <EntityTypeMapping TypeName="ProjManModel.ProjectDatabase">
+              <MappingFragment StoreEntitySet="ProjectDatabase">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="DatabaseName" ColumnName="DatabaseName" />
+                <ScalarProperty Name="ServerName" ColumnName="ServerName" />
+                <ScalarProperty Name="EnvironmentTypeCode" ColumnName="EnvironmentTypeCode" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ProjectDatabaeId" ColumnName="ProjectDatabaeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FieldChanges">
+            <EntityTypeMapping TypeName="ProjManModel.FieldChange">
+              <MappingFragment StoreEntitySet="FieldChange">
+                <ScalarProperty Name="RevisionId" ColumnName="RevisionId" />
+                <ScalarProperty Name="OldValue" ColumnName="OldValue" />
+                <ScalarProperty Name="NewValue" ColumnName="NewValue" />
+                <ScalarProperty Name="FieldChangeTypeCode" ColumnName="FieldChangeTypeCode" />
+                <ScalarProperty Name="EntityFieldId" ColumnName="EntityFieldId" />
+                <ScalarProperty Name="FieldChangeId" ColumnName="FieldChangeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FieldChangeTypes">
+            <EntityTypeMapping TypeName="ProjManModel.FieldChangeType">
+              <MappingFragment StoreEntitySet="FieldChangeType">
+                <ScalarProperty Name="FieldChangeTypeName" ColumnName="FieldChangeTypeName" />
+                <ScalarProperty Name="FieldChangeTypeCode" ColumnName="FieldChangeTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

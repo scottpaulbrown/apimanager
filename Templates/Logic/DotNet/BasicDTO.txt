@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace {{dotnet_project_namespace}}.Logic.DTO {
+    public class {{entity_name}}DTO {
+<CustomVariable tag="entity_field_list" isDTOField="true" tabs="2">
+    <Seperator>{{nl}}</Seperator>
+	<Template>public {{entity_field_data_type}} {{entity_field_name}} { get; set; }</Template>
+</CustomVariable>
+    }
+}
