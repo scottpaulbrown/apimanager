@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppData.cs" />
+    <Compile Include="CommonColors.cs" />
     <Compile Include="EditEntity.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -175,6 +176,7 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\APIManager.Data.Entity.datasource" />
     <None Include="Properties\DataSources\APIManager.Data.EntityField.datasource" />
+    <None Include="Properties\DataSources\APIManager.Data.EntityLink.datasource" />
     <None Include="Properties\DataSources\APIManager.Logic.DataField.datasource" />
     <None Include="Properties\DataSources\APIManager.Logic.EntityFieldInfo.datasource" />
     <None Include="Properties\DataSources\APIManager.Logic.FileVariable.datasource" />

@@ -13,5 +13,6 @@ namespace APIManager.Data.Constants {
         public const string DateTime = "datetime";
         public const string DateTime2 = "datetime2";
         public const string Bit = "bit";
+        public const string Date = "date";
     }
 }

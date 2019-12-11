@@ -33,12 +33,13 @@
             this.grdFields = new System.Windows.Forms.DataGridView();
             this.IsDTO = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.InitialValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ctxFields = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ctxmDeleteField = new System.Windows.Forms.ToolStripMenuItem();
+            this.ctxmUnDeleteField = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.ctxLinks = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ctxmCreateLink = new System.Windows.Forms.ToolStripMenuItem();
-            this.ctxFields = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ctxmDeleteField = new System.Windows.Forms.ToolStripMenuItem();
             this.fieldNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDataType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.maxLengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -49,16 +50,21 @@
             this.isSearchFieldDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.isContainsSearchDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.entityFieldBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.ctxmUnDeleteField = new System.Windows.Forms.ToolStripMenuItem();
+            this.entityLinkBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.ForeignKeyFieldName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PrimaryKeyEntityName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PrimaryKeyFieldName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LinkTypeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdFields)).BeginInit();
+            this.ctxFields.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.ctxLinks.SuspendLayout();
-            this.ctxFields.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.entityFieldBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.entityLinkBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -146,7 +152,8 @@
             this.grdFields.RowTemplate.Height = 28;
             this.grdFields.Size = new System.Drawing.Size(1851, 758);
             this.grdFields.TabIndex = 3;
-            this.grdFields.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFields_CellEndEdit);
+            this.grdFields.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdFields_CellValueChanged);
+            this.grdFields.CurrentCellDirtyStateChanged += new System.EventHandler(this.grdFields_CurrentCellDirtyStateChanged);
             this.grdFields.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.grdFields_RowPrePaint);
             // 
             // IsDTO
@@ -165,6 +172,32 @@
             this.InitialValue.Name = "InitialValue";
             this.InitialValue.Width = 250;
             // 
+            // ctxFields
+            // 
+            this.ctxFields.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.ctxFields.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ctxmDeleteField,
+            this.ctxmUnDeleteField});
+            this.ctxFields.Name = "ctxFields";
+            this.ctxFields.Size = new System.Drawing.Size(185, 68);
+            this.ctxFields.Opening += new System.ComponentModel.CancelEventHandler(this.ctxFields_Opening);
+            // 
+            // ctxmDeleteField
+            // 
+            this.ctxmDeleteField.Image = ((System.Drawing.Image)(resources.GetObject("ctxmDeleteField.Image")));
+            this.ctxmDeleteField.Name = "ctxmDeleteField";
+            this.ctxmDeleteField.Size = new System.Drawing.Size(184, 32);
+            this.ctxmDeleteField.Text = "Delete Field";
+            this.ctxmDeleteField.Click += new System.EventHandler(this.ctxmDeleteField_Click);
+            // 
+            // ctxmUnDeleteField
+            // 
+            this.ctxmUnDeleteField.Image = ((System.Drawing.Image)(resources.GetObject("ctxmUnDeleteField.Image")));
+            this.ctxmUnDeleteField.Name = "ctxmUnDeleteField";
+            this.ctxmUnDeleteField.Size = new System.Drawing.Size(184, 32);
+            this.ctxmUnDeleteField.Text = "Undelete";
+            this.ctxmUnDeleteField.Click += new System.EventHandler(this.ctxmUnDeleteField_Click);
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.dataGridView1);
@@ -179,14 +212,24 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ForeignKeyFieldName,
+            this.PrimaryKeyEntityName,
+            this.PrimaryKeyFieldName,
+            this.LinkTypeName});
             this.dataGridView1.ContextMenuStrip = this.ctxLinks;
+            this.dataGridView1.DataSource = this.entityLinkBindingSource;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(2, 2);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowHeadersWidth = 82;
             this.dataGridView1.RowTemplate.Height = 33;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(1851, 758);
             this.dataGridView1.TabIndex = 0;
             // 
@@ -204,24 +247,6 @@
             this.ctxmCreateLink.Size = new System.Drawing.Size(170, 32);
             this.ctxmCreateLink.Text = "Create Link";
             this.ctxmCreateLink.Click += new System.EventHandler(this.ctxmCreateLink_Click);
-            // 
-            // ctxFields
-            // 
-            this.ctxFields.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.ctxFields.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ctxmDeleteField,
-            this.ctxmUnDeleteField});
-            this.ctxFields.Name = "ctxFields";
-            this.ctxFields.Size = new System.Drawing.Size(249, 101);
-            this.ctxFields.Opening += new System.ComponentModel.CancelEventHandler(this.ctxFields_Opening);
-            // 
-            // ctxmDeleteField
-            // 
-            this.ctxmDeleteField.Image = ((System.Drawing.Image)(resources.GetObject("ctxmDeleteField.Image")));
-            this.ctxmDeleteField.Name = "ctxmDeleteField";
-            this.ctxmDeleteField.Size = new System.Drawing.Size(248, 32);
-            this.ctxmDeleteField.Text = "Delete Field";
-            this.ctxmDeleteField.Click += new System.EventHandler(this.ctxmDeleteField_Click);
             // 
             // fieldNameDataGridViewTextBoxColumn
             // 
@@ -301,13 +326,37 @@
             // 
             this.entityFieldBindingSource.DataSource = typeof(APIManager.Data.EntityField);
             // 
-            // ctxmUnDeleteField
+            // entityLinkBindingSource
             // 
-            this.ctxmUnDeleteField.Image = ((System.Drawing.Image)(resources.GetObject("ctxmUnDeleteField.Image")));
-            this.ctxmUnDeleteField.Name = "ctxmUnDeleteField";
-            this.ctxmUnDeleteField.Size = new System.Drawing.Size(248, 32);
-            this.ctxmUnDeleteField.Text = "Undelete";
-            this.ctxmUnDeleteField.Click += new System.EventHandler(this.ctxmUnDeleteField_Click);
+            this.entityLinkBindingSource.DataSource = typeof(APIManager.Data.EntityLink);
+            // 
+            // ForeignKeyFieldName
+            // 
+            this.ForeignKeyFieldName.DataPropertyName = "ForeignKeyFieldName";
+            this.ForeignKeyFieldName.HeaderText = "Field";
+            this.ForeignKeyFieldName.MinimumWidth = 8;
+            this.ForeignKeyFieldName.Name = "ForeignKeyFieldName";
+            // 
+            // PrimaryKeyEntityName
+            // 
+            this.PrimaryKeyEntityName.DataPropertyName = "PrimaryKeyEntityName";
+            this.PrimaryKeyEntityName.HeaderText = "Primary Key Entity";
+            this.PrimaryKeyEntityName.MinimumWidth = 8;
+            this.PrimaryKeyEntityName.Name = "PrimaryKeyEntityName";
+            // 
+            // PrimaryKeyFieldName
+            // 
+            this.PrimaryKeyFieldName.DataPropertyName = "PrimaryKeyFieldName";
+            this.PrimaryKeyFieldName.HeaderText = "Primary Key Field";
+            this.PrimaryKeyFieldName.MinimumWidth = 8;
+            this.PrimaryKeyFieldName.Name = "PrimaryKeyFieldName";
+            // 
+            // LinkTypeName
+            // 
+            this.LinkTypeName.DataPropertyName = "LinkTypeName";
+            this.LinkTypeName.HeaderText = "Link Type";
+            this.LinkTypeName.MinimumWidth = 8;
+            this.LinkTypeName.Name = "LinkTypeName";
             // 
             // EntityEditor
             // 
@@ -324,11 +373,12 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdFields)).EndInit();
+            this.ctxFields.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ctxLinks.ResumeLayout(false);
-            this.ctxFields.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.entityFieldBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.entityLinkBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -360,5 +410,11 @@
         private System.Windows.Forms.ContextMenuStrip ctxFields;
         private System.Windows.Forms.ToolStripMenuItem ctxmDeleteField;
         private System.Windows.Forms.ToolStripMenuItem ctxmUnDeleteField;
+        private System.Windows.Forms.DataGridViewTextBoxColumn primaryKeyFieldDataGridViewTextBoxColumn;
+        private System.Windows.Forms.BindingSource entityLinkBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ForeignKeyFieldName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PrimaryKeyEntityName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PrimaryKeyFieldName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LinkTypeName;
     }
 }

@@ -100,6 +100,7 @@
     <Compile Include="LogicBase.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\EntityField.cs" />
+    <Compile Include="Model\EntityLink.cs" />
     <Compile Include="Model\IEntity.cs" />
     <Compile Include="Model\IEntityField.cs" />
     <Compile Include="PathType.cs">

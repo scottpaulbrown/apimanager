@@ -74,6 +74,11 @@ namespace APIManager.Data.EntityData {
             copy.PrimaryKeyFieldId = link.PrimaryKeyFieldId;
             copy.StatusCode = link.StatusCode;
             copy.LinkTypeCode = link.LinkTypeCode;
+            copy.PrimaryKeyFieldName = link.PrimaryKeyField.FieldName;
+            copy.ForeignKeyFieldName = link.ForeignKeyField.FieldName;
+            copy.PrimaryKeyEntityName = link.PrimaryKeyField.Entity.EntityName;
+            copy.ForeignKeyEntityName = link.ForeignKeyField.Entity.EntityName;
+            copy.LinkTypeName = link.LinkType.LinkTypeName;
             return copy;
         }
     }

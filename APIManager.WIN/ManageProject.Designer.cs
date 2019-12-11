@@ -33,6 +33,7 @@
             this.btnBeginRevision = new System.Windows.Forms.ToolStripButton();
             this.lblCurrentRevisionLabel = new System.Windows.Forms.ToolStripLabel();
             this.lblCurrentRevision = new System.Windows.Forms.ToolStripLabel();
+            this.btnGenScript = new System.Windows.Forms.ToolStripButton();
             this.btnCommitRevision = new System.Windows.Forms.ToolStripButton();
             this.ctxmGenAll = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxTree = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -47,7 +48,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treMain = new System.Windows.Forms.TreeView();
             this.tabMain = new System.Windows.Forms.TabControl();
-            this.btnGenScript = new System.Windows.Forms.ToolStripButton();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1.SuspendLayout();
             this.ctxTree.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -74,9 +75,9 @@
             this.lblCurrentRevision,
             this.btnGenScript,
             this.btnCommitRevision});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 36);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 33);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1298, 38);
+            this.toolStrip1.Size = new System.Drawing.Size(1298, 34);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -86,7 +87,7 @@
             this.btnOpen.Image = ((System.Drawing.Image)(resources.GetObject("btnOpen.Image")));
             this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(34, 33);
+            this.btnOpen.Size = new System.Drawing.Size(34, 29);
             this.btnOpen.Text = "toolStripButton1";
             // 
             // btnSave
@@ -128,6 +129,17 @@
             this.lblCurrentRevision.Size = new System.Drawing.Size(110, 29);
             this.lblCurrentRevision.Text = "Revision #1";
             this.lblCurrentRevision.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnGenScript
+            // 
+            this.btnGenScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnGenScript.Image = ((System.Drawing.Image)(resources.GetObject("btnGenScript.Image")));
+            this.btnGenScript.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnGenScript.Name = "btnGenScript";
+            this.btnGenScript.Size = new System.Drawing.Size(34, 29);
+            this.btnGenScript.Text = "toolStripButton1";
+            this.btnGenScript.ToolTipText = "Generate Script";
+            this.btnGenScript.Click += new System.EventHandler(this.btnGenScript_Click);
             // 
             // btnCommitRevision
             // 
@@ -192,8 +204,7 @@
             this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1298, 36);
+            this.menuStrip1.Size = new System.Drawing.Size(1298, 33);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -220,7 +231,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 74);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 67);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -232,7 +243,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabMain);
-            this.splitContainer1.Size = new System.Drawing.Size(1298, 743);
+            this.splitContainer1.Size = new System.Drawing.Size(1298, 750);
             this.splitContainer1.SplitterDistance = 431;
             this.splitContainer1.TabIndex = 6;
             // 
@@ -242,7 +253,7 @@
             this.treMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treMain.Location = new System.Drawing.Point(0, 10);
             this.treMain.Name = "treMain";
-            this.treMain.Size = new System.Drawing.Size(431, 733);
+            this.treMain.Size = new System.Drawing.Size(431, 740);
             this.treMain.TabIndex = 0;
             this.treMain.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treMain_NodeMouseDoubleClick);
             // 
@@ -252,19 +263,14 @@
             this.tabMain.Location = new System.Drawing.Point(0, 0);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
-            this.tabMain.Size = new System.Drawing.Size(863, 743);
+            this.tabMain.Size = new System.Drawing.Size(863, 750);
             this.tabMain.TabIndex = 0;
             // 
-            // btnGenScript
+            // imageList1
             // 
-            this.btnGenScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnGenScript.Image = ((System.Drawing.Image)(resources.GetObject("btnGenScript.Image")));
-            this.btnGenScript.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnGenScript.Name = "btnGenScript";
-            this.btnGenScript.Size = new System.Drawing.Size(34, 33);
-            this.btnGenScript.Text = "toolStripButton1";
-            this.btnGenScript.ToolTipText = "Generate Script";
-            this.btnGenScript.Click += new System.EventHandler(this.btnGenScript_Click);
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "link.png");
             // 
             // ManageProject
             // 
@@ -318,5 +324,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuImport;
         private System.Windows.Forms.ToolStripButton btnGenScript;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }

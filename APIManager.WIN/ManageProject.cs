@@ -248,7 +248,13 @@ namespace APIManager.WIN {
                 entityNode.Tag = entity;
                 TreeNode fieldNode = new TreeNode("Fields");
                 entityNode.Nodes.Add(fieldNode);
-                entity.EntityFields.ToList().ForEach(f => fieldNode.Nodes.Add(new TreeNode($"{f.FieldName} ({f.Datatype})")));
+                var hasFieldChanges = LoadFieldsToNode(fieldNode, entity);
+                TreeNode linkNode = new TreeNode("Links");
+                entityNode.Nodes.Add(linkNode);
+                var hasLinkChanges = LoadLinksToNode(linkNode, entity);
+                if (hasFieldChanges || hasLinkChanges) {
+                    entityNode.ForeColor = CommonColors.Modified;
+                }
                 // see which node it should be added to
                 if (entity.StatusCode == EntityStatusCodes.Staged) {
                     newEntityNode.Nodes.Add(entityNode);
@@ -259,6 +265,54 @@ namespace APIManager.WIN {
 
             parentEntityNode.Expand();
             newEntityNode.Expand();
+        }
+
+        private bool LoadFieldsToNode(TreeNode node, Entity entity) {
+            var isNewEntity = entity.StatusCode == EntityStatusCodes.Staged;
+            bool hasChanges = false;
+            // get the fields that should be shown
+            var fieldList = entity.EntityFields.Where(f => _currentRevision != null || f.StatusCode == EntityFieldStatusCodes.Active).ToList();
+            foreach (var field in fieldList) {
+                var isNew = !isNewEntity && field.StatusCode == EntityFieldStatusCodes.Staged;
+                var isDeleted = !isNewEntity && _currentRevision.FieldChanges.Any(c => c.EntityFieldId == field.EntityFieldId && c.FieldChangeTypeCode == FieldChangeTypes.Deleted);
+                
+                if (isNew || isDeleted) {
+                    hasChanges = true;
+                }
+
+                var fieldNode = new TreeNode($"{field.FieldName} ({field.Datatype})");
+                if (isNew) {
+                    fieldNode.ForeColor = CommonColors.AddedDark;
+                } else if (isDeleted) {
+                    fieldNode.ForeColor = CommonColors.DeletedDark;
+                }
+
+                node.Nodes.Add(fieldNode);
+            }
+
+            return hasChanges;
+        }
+
+        private bool LoadLinksToNode(TreeNode node, Entity entity) {
+            // get the fields that should be shown
+            var fieldList = entity.EntityFields.Where(f => (_currentRevision != null || f.StatusCode == EntityFieldStatusCodes.Active) && (f.ParentLinks.Count() > 0)).ToList();
+            var isNewEntity = entity.StatusCode == EntityStatusCodes.Staged;
+            bool hasChanges = false;
+            foreach (var field in fieldList) {
+                if (field.ParentLinks.Count() > 0) {
+                    foreach (var link in field.ParentLinks) {
+                        var linkNode = new TreeNode($"{link.PrimaryKeyField.Entity.EntityName} ({link.PrimaryKeyField.FieldName}) - {link.LinkType.LinkTypeName}");  
+                        if (!isNewEntity && link.StatusCode == EntityLinkStatusCodes.Staged) {
+                            linkNode.ForeColor = CommonColors.AddedDark;
+                            hasChanges = true;
+                        }   
+                        
+                        node.Nodes.Add(linkNode);
+                    }
+                }
+            }
+
+            return hasChanges;
         }
 
         private void treMain_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {

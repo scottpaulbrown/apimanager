@@ -93,17 +93,18 @@ namespace APIManager.Data.RevisionData {
                     // find the current field
                     var curField = current.EntityFields.Where(f => f.EntityFieldId == field.EntityFieldId).First();
                     if (field.IsDeleted) {
+                        // update the initial value just in case
+                        curField.InitialValue = field.InitialValue;
                         // make sure there isn't already a field change record for this
-                        if (!revision.FieldChanges.Any(c => c.EntityFieldId == field.EntityFieldId && c.FieldChangeTypeCode == FieldChangeTypes.Deleted)) {
+                        if (!revision.FieldChanges.Any(c => c.EntityFieldId == field.EntityFieldId && c.FieldChangeTypeCode == FieldChangeTypes.Deleted)) {                           
                             // create a entity field revision to mark the deletion
                             FieldChange fc = new FieldChange();
                             fc.EntityFieldId = field.EntityFieldId;
                             fc.RevisionId = revision.RevisionId;
                             fc.FieldChangeTypeCode = FieldChangeTypes.Deleted;
                             revision.FieldChanges.Add(fc);
-
                             // since this is being deleted, remove any other changes that are setup for this
-                            var changeList = revision.FieldChanges.Where(c => c.EntityFieldId == field.EntityFieldId && c.FieldChangeTypeCode == FieldChangeTypes.Deleted).ToList();
+                            var changeList = revision.FieldChanges.Where(c => c.EntityFieldId == field.EntityFieldId && c.FieldChangeTypeCode != FieldChangeTypes.Deleted).ToList();
                             changeList.ForEach(c => revision.FieldChanges.Remove(c));
                         }
                     }  else {                        

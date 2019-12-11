@@ -48,7 +48,6 @@ namespace APIManager.Data.CodeGen {
                 foreach (var fc in delCols) {
                     string entityName = fc.EntityField.Entity.EntityName;
                     delColPartTwo += GenerateDropColumnScript(entityName, fc.EntityField);
-                    delColPartOneDown = GenerateNewColumnScript(entityName, fc.EntityField);
                     // see if this column has any keys
                     if (fc.EntityField.ParentLinks.Count > 0) {
                         // drop all of these links
@@ -64,12 +63,17 @@ namespace APIManager.Data.CodeGen {
                             delColPartTwoDown = GenerateForeignKeyScript(link);
                         }
                     }
-
+                    
                     changeCount++;
                 }
 
+                // create the entire down (re-create columns) script
+                delColPartOneDown = GenerateFullNewColumnsScript(delCols);
+
                 delColUpScript = GetWithLFIfNotNull(delColPartOne);
                 delColUpScript += GetWithLFIfNotNull(delColPartTwo);
+                delColDownScript = GetWithLFIfNotNull(delColPartOneDown);
+                delColDownScript += GetWithLFIfNotNull(delColPartTwoDown);
             }
 
             // look for new columns
@@ -79,41 +83,7 @@ namespace APIManager.Data.CodeGen {
                 newColUpScript = GenerateFullNewColumnsScript(newCols);
                 // add to the down script
                 newCols.ForEach(c => newColDownScript += GenerateDropColumnScript(c.EntityField.Entity.EntityName, c.EntityField));
-
-                //string newColPartOne = string.Empty;
-                //string newColPartTwo = string.Empty;
-                //string newColPartThree = string.Empty;
-                //Dictionary<string, List<EntityField>> updateFields = new Dictionary<string, List<EntityField>>();
-                //foreach (var newCol in newCols) {
-                //    string entityName = newCol.EntityField.Entity.EntityName;
-                //    // see if the enitty is new or not
-                //    if (newCol.EntityField.Entity.StatusCode == EntityStatusCodes.Active && newCol.EntityField.IsRequired) {
-                //        // since this table already exists and this field is marked as required, first we need to 
-                //        // add is as a nullable, set the value, then change it to a non nullable
-                //        newColPartOne += GenerateNewColumnScript(entityName, newCol.EntityField, true);
-                //        // now add to the fields for the update statement
-                //        if (!updateFields.ContainsKey(entityName)) {
-                //            updateFields.Add(entityName, new List<EntityField>());
-                //        }
-
-                //        updateFields[entityName].Add(newCol.EntityField);
-                //    }
-
-                //    newColPartThree += GenerateNewColumnScript(entityName, newCol.EntityField);
-                //    newColDownScript += GenerateDropColumnScript(entityName, newCol.EntityField);
-                //    changeCount++;
-                //}
-
-                //// see if an update script is needed
-                //if (updateFields.Count > 0) {
-                //    foreach (var key in updateFields.Keys) {
-                //        newColPartTwo += CreateColumnUpdateScript(key, updateFields[key]);
-                //    }
-                //}
-
-                //newColUpScript = GetWithLFIfNotNull(newColPartOne);
-                //newColUpScript += GetWithLFIfNotNull(newColPartTwo);
-                //newColUpScript += GetWithLFIfNotNull(newColPartThree);
+                changeCount += newCols.Count;
             }
 
             // look for new relationships
@@ -239,7 +209,7 @@ CREATE TABLE [{table-name}] (
             string keyTable = link.PrimaryKeyField.Entity.EntityName;
             string columnName = link.ForeignKeyField.FieldName;
             string pkColumnName = link.PrimaryKeyField.FieldName;
-            string sql = $"ALTER TABLE [{table}] WITH CHECK ADD CONSTRAINT [FK_{table}_{keyTable}] FOREIGN KEY([{columnName}]) REFERENCES [{keyTable}] ([{pkColumnName}]);\n\rALTER TABLE [{table}] CHECK CONSTRAINT [FK_{table}_{keyTable}];\n\r";
+            string sql = $"ALTER TABLE [{table}] WITH CHECK ADD CONSTRAINT [FK_{table}_{keyTable}] FOREIGN KEY([{columnName}]) REFERENCES [{keyTable}] ([{pkColumnName}]);\nALTER TABLE [{table}] CHECK CONSTRAINT [FK_{table}_{keyTable}];\n\r";
             return sql;
         }
 

@@ -12,6 +12,7 @@ namespace APIManager.Data.CodeGen {
             new DataTypeMapping(DataTypes.Int, DBDataTypes.Integer),
             new DataTypeMapping(DataTypes.DateTime, DBDataTypes.DateTime),
             new DataTypeMapping(DataTypes.DateTime, DBDataTypes.DateTime2),
+            new DataTypeMapping(DataTypes.DateTime, DBDataTypes.Date),
             new DataTypeMapping(DataTypes.Decimal, DBDataTypes.Decimal)
         };
 

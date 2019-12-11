@@ -35,6 +35,16 @@ namespace APIManager.WIN {
             col.DisplayMember = "DataTypeCode";
             col.ValueMember = "DataTypeCode";
             entityFieldBindingSource.DataSource = entity.EntityFields.ToList();
+
+            // get the links for this object
+            var linkList = new List<EntityLink>();
+            foreach (var field in entity.EntityFields) {
+                if (field.ParentLinks.Count() > 0) {
+                    linkList.AddRange(field.ParentLinks.ToList());
+                }
+            }
+
+            entityLinkBindingSource.DataSource = linkList;
         }
 
         public void OnIsDirtyChanged() {
@@ -67,10 +77,6 @@ namespace APIManager.WIN {
             e.Row.Cells["IsRequired"].Value = true;
         }
 
-        private void grdFields_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
-            OnIsDirtyChanged();
-        }
-
         private void txtName_TextChanged(object sender, EventArgs e) {
             Entity.EntityName = txtName.Text;
             OnIsDirtyChanged();
@@ -92,11 +98,24 @@ namespace APIManager.WIN {
 
         private void ctxmDeleteField_Click(object sender, EventArgs e) {
             var rows = grdFields.SelectedRows;
+            var cnt = 0;
             foreach (DataGridViewRow row in rows) {
                 var field = row.DataBoundItem as EntityField;
+                // make sure this field can be deleted
+                if (field.IsRequired && string.IsNullOrEmpty(field.InitialValue)) {
+                    MessageBox.Show("Cannot delete a required field without specifiying an initial value (for rollback)");
+                    break;
+                }
+
                 // mark this field as deleted
                 field.IsDeleted = true;
+                row.ReadOnly = true;                
+                cnt++;
+            }
+
+            if (cnt > 0) {
                 grdFields.Refresh();
+                OnIsDirtyChanged();
             }
         }
         
@@ -106,10 +125,9 @@ namespace APIManager.WIN {
             var field = row.DataBoundItem as EntityField;
             if (field != null) {
                 if (field.IsDeleted) {
-                    row.DefaultCellStyle.BackColor = Color.FromArgb(255, 163, 153);
-                    row.ReadOnly = true;
+                    row.DefaultCellStyle.BackColor = CommonColors.Deleted;
                 } else if (field.StatusCode == EntityFieldStatusCodes.Staged) {
-                    row.DefaultCellStyle.BackColor = Color.FromArgb(175, 255, 158);
+                    row.DefaultCellStyle.BackColor = CommonColors.Added;
                 } else {
                     row.DefaultCellStyle.BackColor = Color.White;
                 }
@@ -120,6 +138,7 @@ namespace APIManager.WIN {
             if (grdFields.SelectedRows.Count == 0) {
                 e.Cancel = true;
             } else {
+                grdFields.EndEdit();
                 bool allUnDeleted = true;
                 bool allDeleted = true;
                 foreach (DataGridViewRow row in grdFields.SelectedRows) {
@@ -142,8 +161,19 @@ namespace APIManager.WIN {
                 var field = row.DataBoundItem as EntityField;
                 // mark this field as deleted
                 field.IsDeleted = false;
-                grdFields.Refresh();
+                row.ReadOnly = false;
             }
+            
+            grdFields.Refresh();
+            OnIsDirtyChanged();
+        }
+
+        private void grdFields_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+            OnIsDirtyChanged();
+        }
+
+        private void grdFields_CurrentCellDirtyStateChanged(object sender, EventArgs e) {
+            OnIsDirtyChanged();
         }
     }
 }
