@@ -44,11 +44,14 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuImport = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuManTemplates = new System.Windows.Forms.ToolStripMenuItem();
+            this.manageTemplateGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treMain = new System.Windows.Forms.TreeView();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.createLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.ctxTree.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -75,9 +78,9 @@
             this.lblCurrentRevision,
             this.btnGenScript,
             this.btnCommitRevision});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 33);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 36);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1298, 34);
+            this.toolStrip1.Size = new System.Drawing.Size(1298, 38);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -87,7 +90,7 @@
             this.btnOpen.Image = ((System.Drawing.Image)(resources.GetObject("btnOpen.Image")));
             this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(34, 29);
+            this.btnOpen.Size = new System.Drawing.Size(34, 33);
             this.btnOpen.Text = "toolStripButton1";
             // 
             // btnSave
@@ -154,7 +157,7 @@
             // ctxmGenAll
             // 
             this.ctxmGenAll.Name = "ctxmGenAll";
-            this.ctxmGenAll.Size = new System.Drawing.Size(183, 32);
+            this.ctxmGenAll.Size = new System.Drawing.Size(240, 32);
             this.ctxmGenAll.Text = "Generate All";
             // 
             // ctxTree
@@ -162,15 +165,16 @@
             this.ctxTree.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.ctxTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ctxmGenAll,
-            this.ctxmCreateEntity});
+            this.ctxmCreateEntity,
+            this.createLinkToolStripMenuItem});
             this.ctxTree.Name = "ctxTree";
-            this.ctxTree.Size = new System.Drawing.Size(184, 68);
+            this.ctxTree.Size = new System.Drawing.Size(241, 133);
             this.ctxTree.Opening += new System.ComponentModel.CancelEventHandler(this.ctxTree_Opening);
             // 
             // ctxmCreateEntity
             // 
             this.ctxmCreateEntity.Name = "ctxmCreateEntity";
-            this.ctxmCreateEntity.Size = new System.Drawing.Size(183, 32);
+            this.ctxmCreateEntity.Size = new System.Drawing.Size(240, 32);
             this.ctxmCreateEntity.Text = "Create Entity";
             this.ctxmCreateEntity.Click += new System.EventHandler(this.ctxmCreateEntity_Click);
             // 
@@ -204,14 +208,16 @@
             this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1298, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(1298, 36);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuImport});
+            this.mnuImport,
+            this.mnuManTemplates,
+            this.manageTemplateGroupsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -219,9 +225,23 @@
             // mnuImport
             // 
             this.mnuImport.Name = "mnuImport";
-            this.mnuImport.Size = new System.Drawing.Size(230, 34);
+            this.mnuImport.Size = new System.Drawing.Size(317, 34);
             this.mnuImport.Text = "Import Entities";
             this.mnuImport.Click += new System.EventHandler(this.mnuImport_Click);
+            // 
+            // mnuManTemplates
+            // 
+            this.mnuManTemplates.Name = "mnuManTemplates";
+            this.mnuManTemplates.Size = new System.Drawing.Size(317, 34);
+            this.mnuManTemplates.Text = "Manage Templates";
+            this.mnuManTemplates.Click += new System.EventHandler(this.mnuManTemplates_Click);
+            // 
+            // manageTemplateGroupsToolStripMenuItem
+            // 
+            this.manageTemplateGroupsToolStripMenuItem.Name = "manageTemplateGroupsToolStripMenuItem";
+            this.manageTemplateGroupsToolStripMenuItem.Size = new System.Drawing.Size(317, 34);
+            this.manageTemplateGroupsToolStripMenuItem.Text = "Manage Template Groups";
+            this.manageTemplateGroupsToolStripMenuItem.Click += new System.EventHandler(this.manageTemplateGroupsToolStripMenuItem_Click);
             // 
             // fileDialog
             // 
@@ -231,7 +251,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 67);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 74);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -243,7 +263,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabMain);
-            this.splitContainer1.Size = new System.Drawing.Size(1298, 750);
+            this.splitContainer1.Size = new System.Drawing.Size(1298, 743);
             this.splitContainer1.SplitterDistance = 431;
             this.splitContainer1.TabIndex = 6;
             // 
@@ -253,7 +273,7 @@
             this.treMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treMain.Location = new System.Drawing.Point(0, 10);
             this.treMain.Name = "treMain";
-            this.treMain.Size = new System.Drawing.Size(431, 740);
+            this.treMain.Size = new System.Drawing.Size(431, 733);
             this.treMain.TabIndex = 0;
             this.treMain.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treMain_NodeMouseDoubleClick);
             // 
@@ -263,7 +283,7 @@
             this.tabMain.Location = new System.Drawing.Point(0, 0);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
-            this.tabMain.Size = new System.Drawing.Size(863, 750);
+            this.tabMain.Size = new System.Drawing.Size(863, 743);
             this.tabMain.TabIndex = 0;
             // 
             // imageList1
@@ -271,6 +291,13 @@
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "link.png");
+            // 
+            // createLinkToolStripMenuItem
+            // 
+            this.createLinkToolStripMenuItem.Name = "createLinkToolStripMenuItem";
+            this.createLinkToolStripMenuItem.Size = new System.Drawing.Size(240, 32);
+            this.createLinkToolStripMenuItem.Text = "Create Link";
+            this.createLinkToolStripMenuItem.Click += new System.EventHandler(this.createLinkToolStripMenuItem_Click);
             // 
             // ManageProject
             // 
@@ -325,5 +352,8 @@
         private System.Windows.Forms.ToolStripMenuItem mnuImport;
         private System.Windows.Forms.ToolStripButton btnGenScript;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ToolStripMenuItem mnuManTemplates;
+        private System.Windows.Forms.ToolStripMenuItem manageTemplateGroupsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createLinkToolStripMenuItem;
     }
 }

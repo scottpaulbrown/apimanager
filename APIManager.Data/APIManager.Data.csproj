@@ -53,6 +53,10 @@
     <Compile Include="CodeGen\DataTypeMapper.cs" />
     <Compile Include="CodeGen\DataTypeMapping.cs" />
     <Compile Include="CodeGen\DBWorker.cs" />
+    <Compile Include="CodeProjectType.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Constants\CodeProjectTypes.cs" />
     <Compile Include="Constants\DataTypes.cs" />
     <Compile Include="Constants\DBDataTypes.cs" />
     <Compile Include="Constants\EntityChangeTypes.cs" />
@@ -68,6 +72,9 @@
       <DependentUpon>ProjManModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entity.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityAttributeType.cs">
       <DependentUpon>ProjManModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityChange.cs">
@@ -90,7 +97,11 @@
       <DependentUpon>ProjManModel.tt</DependentUpon>
     </Compile>
     <Compile Include="General\AppInfo.cs" />
+    <Compile Include="General\ListDiff.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="LanguageType.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="LinkChange.cs">
       <DependentUpon>ProjManModel.tt</DependentUpon>
     </Compile>
@@ -103,9 +114,9 @@
     <Compile Include="Model\EntityLink.cs" />
     <Compile Include="Model\IEntity.cs" />
     <Compile Include="Model\IEntityField.cs" />
-    <Compile Include="PathType.cs">
-      <DependentUpon>ProjManModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Model\Template.cs" />
+    <Compile Include="Model\TemplateEntityAttribute.cs" />
+    <Compile Include="Model\TemplateGroup.cs" />
     <Compile Include="Project.cs">
       <DependentUpon>ProjManModel.tt</DependentUpon>
     </Compile>
@@ -137,8 +148,27 @@
       <DependentUpon>ProjManModel.tt</DependentUpon>
     </Compile>
     <Compile Include="RevisionData\AddRevisionChangesArgs.cs" />
+    <Compile Include="RevisionData\CommitRevsionArgs.cs" />
     <Compile Include="RevisionData\RevisionLogic.cs" />
     <Compile Include="sysdiagram.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Template.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateData\SearchTemplateGroupsArgs.cs" />
+    <Compile Include="TemplateData\SearchTemplatesArgs.cs" />
+    <Compile Include="TemplateData\TemplateLogic.cs" />
+    <Compile Include="TemplateEntityAttribute.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateGroup.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateGroupEntityAttribute.cs">
+      <DependentUpon>ProjManModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TemplateGroupMember.cs">
       <DependentUpon>ProjManModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

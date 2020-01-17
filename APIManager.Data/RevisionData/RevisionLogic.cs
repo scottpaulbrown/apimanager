@@ -193,23 +193,23 @@ namespace APIManager.Data.RevisionData {
 
             // first update the database
             DBWorker dbWorker = new DBWorker();
-            rev.ScriptFilename = dbWorker.ExecuteRevision(rev, true);
+            rev.ScriptFilename = dbWorker.ExecuteRevision(new CommitRevsionArgs() { Revision = rev, RevisionId = revisionId, ExcuteMigration = false });
             _db.SaveChanges();
         }
 
-        public void CommitRevision(int revisionId) {
+        public void CommitRevision(CommitRevsionArgs args) {
             // get the revision
-            var rev = _db.Revisions.Find(revisionId);
+            args.Revision = _db.Revisions.Find(args.RevisionId);
             // make sure it's in progress
-            if (rev.RevisionStatusCode != RevisionStatuses.InProgress) {
-                throw new Exception($"{rev.RevisionName} is not in progress");
+            if (args.Revision.RevisionStatusCode != RevisionStatuses.InProgress) {
+                throw new Exception($"{args.Revision.RevisionName} is not in progress");
             }
 
             // first update the database
             DBWorker dbWorker = new DBWorker();
-            dbWorker.ExecuteRevision(rev);
+            dbWorker.ExecuteRevision(args);
             // udpate all of the entities
-            foreach (var ec in rev.EntityChanges) {
+            foreach (var ec in args.Revision.EntityChanges) {
                 if (ec.ChangeTypeCode == EntityChangeTypes.Add || ec.ChangeTypeCode == EntityChangeTypes.Imported) {
                     ec.Entity.StatusCode = EntityStatusCodes.Active;
                     ec.Entity.EntityFields.ToList().ForEach(f => f.StatusCode = EntityFieldStatusCodes.Active);
@@ -217,9 +217,23 @@ namespace APIManager.Data.RevisionData {
                     ec.Entity.EntityFields.ToList().ForEach(f => f.ParentLinks.ToList().ForEach(l => l.StatusCode = EntityLinkStatusCodes.Active));
                 }                
             }
+            // update all of the entity fields that were changed
+            foreach (var fc in args.Revision.FieldChanges) {
+                if (fc.FieldChangeTypeCode == FieldChangeTypes.Deleted) {
+                    fc.EntityField.StatusCode = EntityFieldStatusCodes.Deleted;
+                } else if (fc.FieldChangeTypeCode == FieldChangeTypes.Add) {
+                    fc.EntityField.StatusCode = EntityFieldStatusCodes.Active;
+                }
+            }
+            // update all of the entity links that changed
+            foreach (var lc in args.Revision.LinkChanges) {
+                if (lc.ChangeTypeCode == LinkChangeTypes.Add) {
+                    lc.EntityLink.StatusCode = EntityLinkStatusCodes.Active;
+                }
+            }
 
-            rev.RevisionStatusCode = RevisionStatuses.Committed;
-            rev.CommitDate = DateTime.Now;
+            args.Revision.RevisionStatusCode = RevisionStatuses.Committed;
+            args.Revision.CommitDate = DateTime.Now;
             _db.SaveChanges();
         }
     }

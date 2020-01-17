@@ -3,6 +3,7 @@ using APIManager.Data.Constants;
 using APIManager.Data.EntityData;
 using APIManager.Data.General;
 using APIManager.Data.ProjectData;
+using APIManager.Data.ReferenceTypesData;
 using APIManager.Data.RevisionData;
 using System;
 using System.Collections.Generic;
@@ -32,11 +33,21 @@ namespace APIManager.WIN {
             _appData = Helpers.OpenJson<AppData>(_appDataPath);
             GlobalData.AppInfo = new AppInfo();
             GlobalData.AppInfo.Context = new ProjManEntities();
+            LoadReferenceTypes();
             SetupRecentsMenu();            
             // if there is a recent project, go ahead and load the last one
             if (_appData.RecentProjectList != null && _appData.RecentProjectList.Count > 0) {
                 OpenProject(_appData.RecentProjectList[0].ProjectId);
             }
+        }
+
+        private void LoadReferenceTypes() {
+            CommonReferenceTypes rt = new CommonReferenceTypes();
+            ReferenceTypeLogic logic = new ReferenceTypeLogic(GlobalData.AppInfo);
+            rt.CodeProjectTypes = logic.GetAllCodeProjectTypes();
+            rt.LanguageTypes = logic.GetAllLanguageTypes();
+            rt.EntityAttributeTypes = logic.GetAllEntityAttributeTypes();
+            GlobalData.ReferenceTypes = rt;
         }
 
         #region menu functions
@@ -81,6 +92,15 @@ namespace APIManager.WIN {
 
         private void mnuImport_Click(object sender, EventArgs e) {
             ImportEntities();
+        }
+
+        private void mnuManTemplates_Click(object sender, EventArgs e) {
+            var manTmp = new ManageTemplates();
+            manTmp.ShowDialog();
+        }
+        private void manageTemplateGroupsToolStripMenuItem_Click(object sender, EventArgs e) {
+            var manGrp = new ManageTemplateGroups();
+            manGrp.ShowDialog();
         }
 
         #endregion
@@ -171,10 +191,14 @@ namespace APIManager.WIN {
                 SaveProject();
             }
 
-            var logic = new RevisionLogic(GlobalData.AppInfo);
-            logic.CommitRevision(_currentRevision.RevisionId);
-            // reload the entire project
-            OpenProject(_project.ProjectId);
+            CommitRevsionArgs args = new CommitRevsionArgs() { RevisionId = _currentRevision.RevisionId, ExcuteMigration = true };
+            CommitRevision rev = new CommitRevision(args);
+            if (rev.ShowDialog() == DialogResult.OK) {
+                var logic = new RevisionLogic(GlobalData.AppInfo);
+                logic.CommitRevision(args);
+                // reload the entire project
+                OpenProject(_project.ProjectId);
+            }
         }
 
         void GenerateScript() {
@@ -227,6 +251,13 @@ namespace APIManager.WIN {
             }
         }
 
+        void CreateLink() {
+            var frm = new CreateLink();
+            if (frm.ShowDialog() == DialogResult.OK) {
+
+            }
+        }
+
         #endregion
 
         #region tree functions
@@ -274,7 +305,7 @@ namespace APIManager.WIN {
             var fieldList = entity.EntityFields.Where(f => _currentRevision != null || f.StatusCode == EntityFieldStatusCodes.Active).ToList();
             foreach (var field in fieldList) {
                 var isNew = !isNewEntity && field.StatusCode == EntityFieldStatusCodes.Staged;
-                var isDeleted = !isNewEntity && _currentRevision.FieldChanges.Any(c => c.EntityFieldId == field.EntityFieldId && c.FieldChangeTypeCode == FieldChangeTypes.Deleted);
+                var isDeleted = !isNewEntity && _currentRevision != null && _currentRevision.FieldChanges.Any(c => c.EntityFieldId == field.EntityFieldId && c.FieldChangeTypeCode == FieldChangeTypes.Deleted);
                 
                 if (isNew || isDeleted) {
                     hasChanges = true;
@@ -301,7 +332,7 @@ namespace APIManager.WIN {
             foreach (var field in fieldList) {
                 if (field.ParentLinks.Count() > 0) {
                     foreach (var link in field.ParentLinks) {
-                        var linkNode = new TreeNode($"{link.PrimaryKeyField.Entity.EntityName} ({link.PrimaryKeyField.FieldName}) - {link.LinkType.LinkTypeName}");  
+                        var linkNode = new TreeNode($"{link.PrimaryKeyField.Entity.EntityName} ({link.PrimaryKeyField.FieldName}) - {link.LinkTypeCode}");  
                         if (!isNewEntity && link.StatusCode == EntityLinkStatusCodes.Staged) {
                             linkNode.ForeColor = CommonColors.AddedDark;
                             hasChanges = true;
@@ -323,10 +354,12 @@ namespace APIManager.WIN {
         }
 
         private void ctxTree_Opening(object sender, CancelEventArgs e) {
+            bool isEntity = treMain.SelectedNode != null && treMain.SelectedNode.Tag != null && treMain.SelectedNode.Tag is Entity;
             var nodeLevel = treMain.SelectedNode == null ? -1 : treMain.SelectedNode.Level;
             //ctxmImportEntity.Visible = nodeLevel == TreeLevels.EntityParent;
             ctxmGenAll.Visible = treMain.SelectedNode != null && treMain.SelectedNode.Tag is Entity && treMain.SelectedNode.Parent.Tag.ToString() == "Entity";
-            ctxmCreateEntity.Visible = _currentRevision != null;
+            //ctxmCreateEntity.Visible = _currentRevision != null;
+            createLinkToolStripMenuItem.Visible = isEntity;
         }
 
         private void ctxmGenAll_Click(object sender, EventArgs e) {
@@ -345,10 +378,17 @@ namespace APIManager.WIN {
             entity.EntityName = "NewEntity";
             entity.StatusCode = EntityStatusCodes.Staged;
             entity.ProjectId = _project.ProjectId;
-            LoadEntity(entity);
+            //LoadEntity(entity);
+            var frm = new DesignEntity();
+            if (frm.ShowDialog() == DialogResult.OK) {
+
+            }
         }
 
         #endregion
 
+        private void createLinkToolStripMenuItem_Click(object sender, EventArgs e) {
+            CreateLink();
+        }
     }
 }

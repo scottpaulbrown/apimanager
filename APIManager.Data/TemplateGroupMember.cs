@@ -12,16 +12,13 @@ namespace APIManager.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class ProjectPath
+    public partial class TemplateGroupMember
     {
-        public int ProjectPathId { get; set; }
-        public int ProjectId { get; set; }
-        public string Path { get; set; }
-        public string CodeProjectTypeCode { get; set; }
-        public string LanguageTypeCode { get; set; }
+        public int TemplateGroupMemberId { get; set; }
+        public int TemplateGroupId { get; set; }
+        public int TemplateId { get; set; }
     
-        public virtual Project Project { get; set; }
-        public virtual CodeProjectType CodeProjectType { get; set; }
-        public virtual LanguageType LanguageType { get; set; }
+        public virtual TemplateGroup TemplateGroup { get; set; }
+        public virtual Template Template { get; set; }
     }
 }

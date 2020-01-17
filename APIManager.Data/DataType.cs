@@ -16,5 +16,7 @@ namespace APIManager.Data
     {
         public string DataTypeCode { get; set; }
         public string DataTypeName { get; set; }
+        public bool NeedsLength { get; set; }
+        public bool NeedsScale { get; set; }
     }
 }

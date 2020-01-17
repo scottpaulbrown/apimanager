@@ -8,5 +8,6 @@ using System.Threading.Tasks;
 namespace APIManager.WIN {
     public static class GlobalData {
         public static AppInfo AppInfo { get; set; }
+        public static CommonReferenceTypes ReferenceTypes { get; set; }
     }
 }

@@ -61,12 +61,43 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppData.cs" />
+    <Compile Include="ChooseEntityAttributes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChooseEntityAttributes.Designer.cs">
+      <DependentUpon>ChooseEntityAttributes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommitRevision.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommitRevision.Designer.cs">
+      <DependentUpon>CommitRevision.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommonColors.cs" />
+    <Compile Include="CommonReferenceTypes.cs" />
+    <Compile Include="CreateLink.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateLink.Designer.cs">
+      <DependentUpon>CreateLink.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DesignEntity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DesignEntity.Designer.cs">
+      <DependentUpon>DesignEntity.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditEntity.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="EditEntity.Designer.cs">
       <DependentUpon>EditEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditEntityFields.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditEntityFields.Designer.cs">
+      <DependentUpon>EditEntityFields.cs</DependentUpon>
     </Compile>
     <Compile Include="EditLink.cs">
       <SubType>Form</SubType>
@@ -80,11 +111,29 @@
     <Compile Include="EditRequest.Designer.cs">
       <DependentUpon>EditRequest.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditTemplate.Designer.cs">
+      <DependentUpon>EditTemplate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditTemplateGroup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditTemplateGroup.Designer.cs">
+      <DependentUpon>EditTemplateGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="EntityEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="EntityEditor.Designer.cs">
       <DependentUpon>EntityEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityFieldEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EntityFieldEditor.Designer.cs">
+      <DependentUpon>EntityFieldEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -111,6 +160,18 @@
     <Compile Include="ManageProject.Designer.cs">
       <DependentUpon>ManageProject.cs</DependentUpon>
     </Compile>
+    <Compile Include="ManageTemplateGroups.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageTemplateGroups.Designer.cs">
+      <DependentUpon>ManageTemplateGroups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManageTemplates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManageTemplates.Designer.cs">
+      <DependentUpon>ManageTemplates.cs</DependentUpon>
+    </Compile>
     <Compile Include="ObjectSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,8 +195,30 @@
     <Compile Include="TemplateProperties.Designer.cs">
       <DependentUpon>TemplateProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="WizardButtons.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WizardButtons.Designer.cs">
+      <DependentUpon>WizardButtons.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WizardNavigationArgs.cs" />
+    <EmbeddedResource Include="ChooseEntityAttributes.resx">
+      <DependentUpon>ChooseEntityAttributes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommitRevision.resx">
+      <DependentUpon>CommitRevision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateLink.resx">
+      <DependentUpon>CreateLink.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DesignEntity.resx">
+      <DependentUpon>DesignEntity.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditEntity.resx">
       <DependentUpon>EditEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditEntityFields.resx">
+      <DependentUpon>EditEntityFields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditLink.resx">
       <DependentUpon>EditLink.cs</DependentUpon>
@@ -143,8 +226,17 @@
     <EmbeddedResource Include="EditRequest.resx">
       <DependentUpon>EditRequest.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EditTemplate.resx">
+      <DependentUpon>EditTemplate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditTemplateGroup.resx">
+      <DependentUpon>EditTemplateGroup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EntityEditor.resx">
       <DependentUpon>EntityEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EntityFieldEditor.resx">
+      <DependentUpon>EntityFieldEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImportEntities.resx">
       <DependentUpon>ImportEntities.cs</DependentUpon>
@@ -154,6 +246,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ManageProject.resx">
       <DependentUpon>ManageProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageTemplateGroups.resx">
+      <DependentUpon>ManageTemplateGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageTemplates.resx">
+      <DependentUpon>ManageTemplates.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ObjectSelection.resx">
       <DependentUpon>ObjectSelection.cs</DependentUpon>
@@ -173,10 +271,16 @@
     <EmbeddedResource Include="TemplateProperties.resx">
       <DependentUpon>TemplateProperties.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WizardButtons.resx">
+      <DependentUpon>WizardButtons.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\APIManager.Data.Entity.datasource" />
+    <None Include="Properties\DataSources\APIManager.Data.EntityAttributeType.datasource" />
     <None Include="Properties\DataSources\APIManager.Data.EntityField.datasource" />
     <None Include="Properties\DataSources\APIManager.Data.EntityLink.datasource" />
+    <None Include="Properties\DataSources\APIManager.Data.Template.datasource" />
+    <None Include="Properties\DataSources\APIManager.Data.TemplateEntityAttribute.datasource" />
     <None Include="Properties\DataSources\APIManager.Logic.DataField.datasource" />
     <None Include="Properties\DataSources\APIManager.Logic.EntityFieldInfo.datasource" />
     <None Include="Properties\DataSources\APIManager.Logic.FileVariable.datasource" />

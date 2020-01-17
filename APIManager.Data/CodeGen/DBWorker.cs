@@ -1,4 +1,5 @@
 ﻿using APIManager.Data.Constants;
+using APIManager.Data.RevisionData;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,7 +11,7 @@ namespace APIManager.Data.CodeGen {
     public class DBWorker {
         string databaseProjPath;
 
-        public string ExecuteRevision(Revision revision, bool generateOnly = false) {
+        public string ExecuteRevision(CommitRevsionArgs args) {
             string tableUpScript = string.Empty;
             string tableDownScript = string.Empty;
             string delColUpScript = string.Empty;
@@ -21,12 +22,12 @@ namespace APIManager.Data.CodeGen {
             string fkDownScript = string.Empty;
             int changeCount = 0;
             // find the database project path
-            databaseProjPath = revision.Project.ProjectPaths.Where(p => p.PathTypeCode == PathTypes.DatabaseProject).First().Path;
+            databaseProjPath = args.Revision.Project.ProjectPaths.Where(p => p.CodeProjectTypeCode == CodeProjectTypes.DB).First().Path;
             // first create script for each entity revision
-            foreach (var eRev in revision.EntityChanges) {
+            foreach (var eRev in args.Revision.EntityChanges) {
                 if (eRev.ChangeTypeCode == EntityChangeTypes.Add) {
                     // find the entity
-                    var entity = revision.Project.Entities.Where(e => e.EntityId == eRev.EntityId).First();
+                    var entity = args.Revision.Project.Entities.Where(e => e.EntityId == eRev.EntityId).First();
                     string addScript = GenerateCreateTableScript(entity);
                     if (tableUpScript != string.Empty) { tableUpScript += "\n\n"; }
                     tableUpScript += addScript;
@@ -38,7 +39,7 @@ namespace APIManager.Data.CodeGen {
             }
 
             // look for deleted columns
-            var delCols = revision.FieldChanges.Where(fc => fc.FieldChangeTypeCode == FieldChangeTypes.Deleted).ToList();
+            var delCols = args.Revision.FieldChanges.Where(fc => fc.FieldChangeTypeCode == FieldChangeTypes.Deleted).ToList();
             if (delCols.Count > 0) {
                 string delColPartOne = string.Empty;
                 string delColPartOneDown = string.Empty;
@@ -77,7 +78,7 @@ namespace APIManager.Data.CodeGen {
             }
 
             // look for new columns
-            var newCols = revision.FieldChanges.Where(fc => fc.FieldChangeTypeCode == FieldChangeTypes.Add).ToList();
+            var newCols = args.Revision.FieldChanges.Where(fc => fc.FieldChangeTypeCode == FieldChangeTypes.Add).ToList();
             if (newCols.Count > 0) {
                 // create the new column up script
                 newColUpScript = GenerateFullNewColumnsScript(newCols);
@@ -87,7 +88,7 @@ namespace APIManager.Data.CodeGen {
             }
 
             // look for new relationships
-            foreach (var lRev in revision.LinkChanges) {
+            foreach (var lRev in args.Revision.LinkChanges) {
                 if (lRev.ChangeTypeCode == LinkChangeTypes.Add) {
                     fkUpScript += GenerateForeignKeyScript(lRev.EntityLink);
                     fkDownScript += GenerateForeignKeyRollbackScript(lRev.EntityLink);
@@ -97,9 +98,9 @@ namespace APIManager.Data.CodeGen {
 
             if (changeCount > 0) {
                 // see if this revision already has script created
-                string fileName = revision.ScriptFilename;
-                if (string.IsNullOrEmpty(revision.ScriptFilename)) {
-                    fileName = GenerateMigrationScript(revision.Project, revision);
+                string fileName = args.Revision.ScriptFilename;
+                if (string.IsNullOrEmpty(args.Revision.ScriptFilename)) {
+                    fileName = GenerateMigrationScript(args.Revision.Project, args.Revision);
                 }
                
                 string migrationScript = tableUpScript;
@@ -117,8 +118,8 @@ namespace APIManager.Data.CodeGen {
                 File.WriteAllText(scriptPath, migrationScript);
 
                 // determine if the script should be excecuted
-                if (!generateOnly) {
-                    ExecuteMigrateUp(revision.Project);
+                if (args.ExcuteMigration) {
+                    ExecuteMigrateUp(args.Revision.Project);
                 }
 
                 return fileName;
@@ -174,6 +175,10 @@ CREATE TABLE [{table-name}] (
             return $"ALTER TABLE [{tableName}] ADD {GetColumnDef(field, overrideRequired)};\n";
         }
 
+        public string GenerateUpdateColumnScript(string tableName, EntityField field, bool overrideRequired = false) {
+            return $"ALTER TABLE [{tableName}] ALTER COLUMN {GetColumnDef(field, overrideRequired)};\n";
+        }
+
         public string GenerateDropColumnScript(string tableName, EntityField field) {
             return $"ALTER TABLE [{tableName}] DROP COLUMN [{field.FieldName}];\n";
         }
@@ -216,7 +221,7 @@ CREATE TABLE [{table-name}] (
         public string GenerateForeignKeyRollbackScript(EntityLink link) {
             string table = link.ForeignKeyField.Entity.EntityName;
             string keyTable = link.PrimaryKeyField.Entity.EntityName;
-            string sql = $"ALTER TABLE [{table}] DROP CONSTRAINT [FK_{table}_{keyTable}];";
+            string sql = $"ALTER TABLE [{table}] DROP CONSTRAINT [FK_{table}_{keyTable}];\n";
             return sql;
         }
 
@@ -239,9 +244,11 @@ CREATE TABLE [{table-name}] (
                     }
 
                     updateFields[entityName].Add(newCol.EntityField);
-                }
 
-                newColPartThree += GenerateNewColumnScript(entityName, newCol.EntityField);
+                    newColPartThree += GenerateUpdateColumnScript(entityName, newCol.EntityField);
+                } else {
+                    newColPartThree += GenerateNewColumnScript(entityName, newCol.EntityField);
+                }
             }
 
             // see if an update script is needed
@@ -294,6 +301,7 @@ CREATE TABLE [{table-name}] (
                         using (SqlDataReader fieldReader = fieldCmd.ExecuteReader()) {
                             while (fieldReader.Read()) {
                                 EntityField field = new EntityField();
+                                field.Entity = entity;
                                 field.FieldName = fieldReader["column_name"].ToString();
                                 field.Datatype = fieldReader["data_type"].ToString();
                                 field.IsSearchField = true;
@@ -380,11 +388,12 @@ ORDER BY	fkt.name
                                 link.StatusCode = EntityLinkStatusCodes.Staged;
                                 field.ParentLinks.Add(link);
                                 link.PrimaryKeyField = pkField;
+                                link.ForeignKeyField = field;
                                 // try to determine which type of link this is
                                 if (pkFieldName.ToUpper().EndsWith("CODE") || pkFieldName.ToUpper().EndsWith("TYPE")) {
-                                    link.LinkTypeCode = EntityLinkTypes.Reference;
+                                    link.LinkTypeCode = EntityLinkTypes.Reference;                                    
                                 } else {
-                                    link.LinkTypeCode = EntityLinkTypes.Collection;
+                                    link.LinkTypeCode = EntityLinkTypes.Collection;                                    
                                 }
                             }
                         }

@@ -30,7 +30,6 @@ namespace APIManager.Data
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<Revision> Revisions { get; set; }
-        public virtual DbSet<PathType> PathTypes { get; set; }
         public virtual DbSet<ProjectPath> ProjectPaths { get; set; }
         public virtual DbSet<DataType> DataTypes { get; set; }
         public virtual DbSet<EntityChange> EntityChanges { get; set; }
@@ -41,5 +40,13 @@ namespace APIManager.Data
         public virtual DbSet<ProjectDatabase> ProjectDatabases { get; set; }
         public virtual DbSet<FieldChange> FieldChanges { get; set; }
         public virtual DbSet<FieldChangeType> FieldChangeTypes { get; set; }
+        public virtual DbSet<CodeProjectType> CodeProjectTypes { get; set; }
+        public virtual DbSet<EntityAttributeType> EntityAttributeTypes { get; set; }
+        public virtual DbSet<LanguageType> LanguageTypes { get; set; }
+        public virtual DbSet<Template> Templates { get; set; }
+        public virtual DbSet<TemplateEntityAttribute> TemplateEntityAttributes { get; set; }
+        public virtual DbSet<TemplateGroup> TemplateGroups { get; set; }
+        public virtual DbSet<TemplateGroupMember> TemplateGroupMembers { get; set; }
+        public virtual DbSet<TemplateGroupEntityAttribute> TemplateGroupEntityAttributes { get; set; }
     }
 }

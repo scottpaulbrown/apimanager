@@ -12,18 +12,21 @@ namespace APIManager.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class PathType
+    public partial class CodeProjectType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PathType()
+        public CodeProjectType()
         {
             this.ProjectPaths = new HashSet<ProjectPath>();
+            this.Templates = new HashSet<Template>();
         }
     
-        public string PathTypeCode { get; set; }
-        public string PathTypeName { get; set; }
+        public string CodeProjectTypeCode { get; set; }
+        public string CodeProjectTypeName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProjectPath> ProjectPaths { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Template> Templates { get; set; }
     }
 }

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using APIManager.Data.General;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
@@ -44,6 +46,37 @@ namespace APIManager.Data {
             DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
             T obj = (T)ser.ReadObject(stream);
             return obj;
+        }
+
+        public static List<T> SyncList<T>(ICollection<T> toList, ICollection<T> fromList, Func<T, T, bool> match) {
+            // first see if there are new items
+            foreach (var item in fromList) {
+                // try to find this item in the to list
+                if (!toList.Any(a => match(item, a))) {
+                    // add this item
+                    toList.Add(item);
+                }
+            }
+
+            var delList = toList.Where(a => !fromList.Any(b => match(b, a))).ToList();
+            delList.ForEach(a => toList.Remove(a));
+            return delList;
+        }
+
+        public static ListDiff<T> GetListDiff<T>(ICollection<T> toList, ICollection<T> fromList, Func<T, T, bool> match) {
+            ListDiff<T> diff = new ListDiff<T>();
+            // first see if there are new items
+            foreach (var item in fromList) {
+                // try to find this item in the to list
+                if (!toList.Any(a => match(item, a))) {
+                    // add this item
+                    diff.NewEntries.Add(item);
+                }
+            }
+
+            var delList = toList.Where(a => !fromList.Any(b => match(b, a))).ToList();
+            diff.DeletedEntries.AddRange(delList);
+            return diff;
         }
     }
 }

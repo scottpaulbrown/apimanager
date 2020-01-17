@@ -17,5 +17,17 @@ namespace APIManager.Data.ReferenceTypesData {
         public List<LinkType> GetAllLinkTypes() {
             return _db.LinkTypes.ToList();
         }
+
+        public List<LanguageType> GetAllLanguageTypes() {
+            return _db.LanguageTypes.ToList();
+        }
+
+        public List<CodeProjectType> GetAllCodeProjectTypes() {
+            return _db.CodeProjectTypes.ToList();
+        }
+
+        public List<EntityAttributeType> GetAllEntityAttributeTypes() {
+            return _db.EntityAttributeTypes.ToList();
+        }
     }
 }

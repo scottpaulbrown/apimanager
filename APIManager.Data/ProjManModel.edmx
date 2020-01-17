@@ -5,12 +5,21 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ProjManModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CodeProjectType">
+          <Key>
+            <PropertyRef Name="CodeProjectTypeCode" />
+          </Key>
+          <Property Name="CodeProjectTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="CodeProjectTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="DataType">
           <Key>
             <PropertyRef Name="DataTypeCode" />
           </Key>
           <Property Name="DataTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="DataTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NeedsLength" Type="bit" Nullable="false" />
+          <Property Name="NeedsScale" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Entity">
           <Key>
@@ -20,6 +29,13 @@
           <Property Name="ProjectId" Type="int" Nullable="false" />
           <Property Name="EntityName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="StatusCode" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EntityAttributeType">
+          <Key>
+            <PropertyRef Name="EntityAttributeTypeCode" />
+          </Key>
+          <Property Name="EntityAttributeTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="EntityAttributeTypeName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="EntityChange">
           <Key>
@@ -86,6 +102,13 @@
           <Property Name="FieldChangeTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="FieldChangeTypeName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="LanguageType">
+          <Key>
+            <PropertyRef Name="LanguageTypeCode" />
+          </Key>
+          <Property Name="LanguageTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="LanguageTypeName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="LinkChange">
           <Key>
             <PropertyRef Name="LinkChangeId" />
@@ -101,13 +124,6 @@
           </Key>
           <Property Name="LinkTypeCode" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="LinkTypeName" Type="varchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="PathType">
-          <Key>
-            <PropertyRef Name="PathTypeCode" />
-          </Key>
-          <Property Name="PathTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
-          <Property Name="PathTypeName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Project">
           <Key>
@@ -135,8 +151,9 @@
           </Key>
           <Property Name="ProjectPathId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProjectId" Type="int" Nullable="false" />
-          <Property Name="PathTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="Path" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="CodeProjectTypeCode" Type="varchar" MaxLength="15" />
+          <Property Name="LanguageTypeCode" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="Revision">
           <Key>
@@ -159,6 +176,48 @@
           <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Template">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FileMask" Type="varchar" MaxLength="50" />
+          <Property Name="PathMask" Type="varchar" MaxLength="50" />
+          <Property Name="CodeProjectTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="LanguageTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TemplateEntityAttribute">
+          <Key>
+            <PropertyRef Name="TemplateEntityAttributeId" />
+          </Key>
+          <Property Name="TemplateEntityAttributeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateId" Type="int" Nullable="false" />
+          <Property Name="EntityAttributeTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TemplateGroup">
+          <Key>
+            <PropertyRef Name="TemplateGroupId" />
+          </Key>
+          <Property Name="TemplateGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateGroupName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TemplateGroupEntityAttribute">
+          <Key>
+            <PropertyRef Name="TemplateGroupEntityAttributeId" />
+          </Key>
+          <Property Name="TemplateGroupEntityAttributeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EntityAttributeTypeCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="TemplateGroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TemplateGroupMember">
+          <Key>
+            <PropertyRef Name="TemplateGroupMemberId" />
+          </Key>
+          <Property Name="TemplateGroupMemberId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateGroupId" Type="int" Nullable="false" />
+          <Property Name="TemplateId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_Entity_Project">
           <End Role="Project" Type="Self.Project" Multiplicity="1" />
@@ -328,15 +387,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProjectPath_PathType">
-          <End Role="PathType" Type="Self.PathType" Multiplicity="1" />
+        <Association Name="FK_ProjectPath_CodeProjectType">
+          <End Role="CodeProjectType" Type="Self.CodeProjectType" Multiplicity="0..1" />
           <End Role="ProjectPath" Type="Self.ProjectPath" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="PathType">
-              <PropertyRef Name="PathTypeCode" />
+            <Principal Role="CodeProjectType">
+              <PropertyRef Name="CodeProjectTypeCode" />
             </Principal>
             <Dependent Role="ProjectPath">
-              <PropertyRef Name="PathTypeCode" />
+              <PropertyRef Name="CodeProjectTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectPath_LanguageType">
+          <End Role="LanguageType" Type="Self.LanguageType" Multiplicity="0..1" />
+          <End Role="ProjectPath" Type="Self.ProjectPath" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LanguageType">
+              <PropertyRef Name="LanguageTypeCode" />
+            </Principal>
+            <Dependent Role="ProjectPath">
+              <PropertyRef Name="LanguageTypeCode" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -364,23 +435,126 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Template_CodeProjectType">
+          <End Role="CodeProjectType" Type="Self.CodeProjectType" Multiplicity="1" />
+          <End Role="Template" Type="Self.Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CodeProjectType">
+              <PropertyRef Name="CodeProjectTypeCode" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="CodeProjectTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Template_LanguageType">
+          <End Role="LanguageType" Type="Self.LanguageType" Multiplicity="1" />
+          <End Role="Template" Type="Self.Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LanguageType">
+              <PropertyRef Name="LanguageTypeCode" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="LanguageTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateEntityAttribute_EntityAttributeType">
+          <End Role="EntityAttributeType" Type="Self.EntityAttributeType" Multiplicity="1" />
+          <End Role="TemplateEntityAttribute" Type="Self.TemplateEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityAttributeType">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Principal>
+            <Dependent Role="TemplateEntityAttribute">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateEntityAttribute_Template">
+          <End Role="Template" Type="Self.Template" Multiplicity="1" />
+          <End Role="TemplateEntityAttribute" Type="Self.TemplateEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="TemplateEntityAttribute">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupEntityAttribute_EntityAttributeType">
+          <End Role="EntityAttributeType" Type="Self.EntityAttributeType" Multiplicity="1" />
+          <End Role="TemplateGroupEntityAttribute" Type="Self.TemplateGroupEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityAttributeType">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Principal>
+            <Dependent Role="TemplateGroupEntityAttribute">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupEntityAttribute_TemplateGroup">
+          <End Role="TemplateGroup" Type="Self.TemplateGroup" Multiplicity="1" />
+          <End Role="TemplateGroupEntityAttribute" Type="Self.TemplateGroupEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TemplateGroup">
+              <PropertyRef Name="TemplateGroupId" />
+            </Principal>
+            <Dependent Role="TemplateGroupEntityAttribute">
+              <PropertyRef Name="TemplateGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupMember_Template">
+          <End Role="Template" Type="Self.Template" Multiplicity="1" />
+          <End Role="TemplateGroupMember" Type="Self.TemplateGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="TemplateGroupMember">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupMember_TemplateGroup">
+          <End Role="TemplateGroup" Type="Self.TemplateGroup" Multiplicity="1" />
+          <End Role="TemplateGroupMember" Type="Self.TemplateGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TemplateGroup">
+              <PropertyRef Name="TemplateGroupId" />
+            </Principal>
+            <Dependent Role="TemplateGroupMember">
+              <PropertyRef Name="TemplateGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="ProjManModelStoreContainer">
+          <EntitySet Name="CodeProjectType" EntityType="Self.CodeProjectType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DataType" EntityType="Self.DataType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Entity" EntityType="Self.Entity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EntityAttributeType" EntityType="Self.EntityAttributeType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityChange" EntityType="Self.EntityChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityField" EntityType="Self.EntityField" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EntityLink" EntityType="Self.EntityLink" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EnvironmentType" EntityType="Self.EnvironmentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FieldChange" EntityType="Self.FieldChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FieldChangeType" EntityType="Self.FieldChangeType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LanguageType" EntityType="Self.LanguageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LinkChange" EntityType="Self.LinkChange" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LinkType" EntityType="Self.LinkType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PathType" EntityType="Self.PathType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectDatabase" EntityType="Self.ProjectDatabase" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProjectPath" EntityType="Self.ProjectPath" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Revision" EntityType="Self.Revision" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Template" EntityType="Self.Template" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TemplateEntityAttribute" EntityType="Self.TemplateEntityAttribute" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TemplateGroup" EntityType="Self.TemplateGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TemplateGroupEntityAttribute" EntityType="Self.TemplateGroupEntityAttribute" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TemplateGroupMember" EntityType="Self.TemplateGroupMember" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Entity_Project" Association="Self.FK_Entity_Project">
             <End Role="Project" EntitySet="Project" />
             <End Role="Entity" EntitySet="Entity" />
@@ -437,8 +611,12 @@
             <End Role="Project" EntitySet="Project" />
             <End Role="ProjectDatabase" EntitySet="ProjectDatabase" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProjectPath_PathType" Association="Self.FK_ProjectPath_PathType">
-            <End Role="PathType" EntitySet="PathType" />
+          <AssociationSet Name="FK_ProjectPath_CodeProjectType" Association="Self.FK_ProjectPath_CodeProjectType">
+            <End Role="CodeProjectType" EntitySet="CodeProjectType" />
+            <End Role="ProjectPath" EntitySet="ProjectPath" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectPath_LanguageType" Association="Self.FK_ProjectPath_LanguageType">
+            <End Role="LanguageType" EntitySet="LanguageType" />
             <End Role="ProjectPath" EntitySet="ProjectPath" />
           </AssociationSet>
           <AssociationSet Name="FK_ProjectPath_Project" Association="Self.FK_ProjectPath_Project">
@@ -448,6 +626,38 @@
           <AssociationSet Name="FK_Revision_Project" Association="Self.FK_Revision_Project">
             <End Role="Project" EntitySet="Project" />
             <End Role="Revision" EntitySet="Revision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_CodeProjectType" Association="Self.FK_Template_CodeProjectType">
+            <End Role="CodeProjectType" EntitySet="CodeProjectType" />
+            <End Role="Template" EntitySet="Template" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_LanguageType" Association="Self.FK_Template_LanguageType">
+            <End Role="LanguageType" EntitySet="LanguageType" />
+            <End Role="Template" EntitySet="Template" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateEntityAttribute_EntityAttributeType" Association="Self.FK_TemplateEntityAttribute_EntityAttributeType">
+            <End Role="EntityAttributeType" EntitySet="EntityAttributeType" />
+            <End Role="TemplateEntityAttribute" EntitySet="TemplateEntityAttribute" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateEntityAttribute_Template" Association="Self.FK_TemplateEntityAttribute_Template">
+            <End Role="Template" EntitySet="Template" />
+            <End Role="TemplateEntityAttribute" EntitySet="TemplateEntityAttribute" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupEntityAttribute_EntityAttributeType" Association="Self.FK_TemplateGroupEntityAttribute_EntityAttributeType">
+            <End Role="EntityAttributeType" EntitySet="EntityAttributeType" />
+            <End Role="TemplateGroupEntityAttribute" EntitySet="TemplateGroupEntityAttribute" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupEntityAttribute_TemplateGroup" Association="Self.FK_TemplateGroupEntityAttribute_TemplateGroup">
+            <End Role="TemplateGroup" EntitySet="TemplateGroup" />
+            <End Role="TemplateGroupEntityAttribute" EntitySet="TemplateGroupEntityAttribute" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupMember_Template" Association="Self.FK_TemplateGroupMember_Template">
+            <End Role="Template" EntitySet="Template" />
+            <End Role="TemplateGroupMember" EntitySet="TemplateGroupMember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupMember_TemplateGroup" Association="Self.FK_TemplateGroupMember_TemplateGroup">
+            <End Role="TemplateGroup" EntitySet="TemplateGroup" />
+            <End Role="TemplateGroupMember" EntitySet="TemplateGroupMember" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -553,12 +763,7 @@
             <End Role="Project" EntitySet="Projects" />
             <End Role="Revision" EntitySet="Revisions" />
           </AssociationSet>
-          <EntitySet Name="PathTypes" EntityType="ProjManModel.PathType" />
           <EntitySet Name="ProjectPaths" EntityType="ProjManModel.ProjectPath" />
-          <AssociationSet Name="FK_ProjectPath_PathType" Association="ProjManModel.FK_ProjectPath_PathType">
-            <End Role="PathType" EntitySet="PathTypes" />
-            <End Role="ProjectPath" EntitySet="ProjectPaths" />
-          </AssociationSet>
           <AssociationSet Name="FK_ProjectPath_Project" Association="ProjManModel.FK_ProjectPath_Project">
             <End Role="Project" EntitySet="Projects" />
             <End Role="ProjectPath" EntitySet="ProjectPaths" />
@@ -620,6 +825,54 @@
             <End Role="Revision" EntitySet="Revisions" />
             <End Role="FieldChange" EntitySet="FieldChanges" />
           </AssociationSet>
+          <EntitySet Name="CodeProjectTypes" EntityType="ProjManModel.CodeProjectType" />
+          <EntitySet Name="EntityAttributeTypes" EntityType="ProjManModel.EntityAttributeType" />
+          <EntitySet Name="LanguageTypes" EntityType="ProjManModel.LanguageType" />
+          <EntitySet Name="Templates" EntityType="ProjManModel.Template" />
+          <EntitySet Name="TemplateEntityAttributes" EntityType="ProjManModel.TemplateEntityAttribute" />
+          <EntitySet Name="TemplateGroups" EntityType="ProjManModel.TemplateGroup" />
+          <EntitySet Name="TemplateGroupMembers" EntityType="ProjManModel.TemplateGroupMember" />
+          <AssociationSet Name="FK_ProjectPath_CodeProjectType" Association="ProjManModel.FK_ProjectPath_CodeProjectType">
+            <End Role="CodeProjectType" EntitySet="CodeProjectTypes" />
+            <End Role="ProjectPath" EntitySet="ProjectPaths" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateEntityAttribute_EntityAttributeType" Association="ProjManModel.FK_TemplateEntityAttribute_EntityAttributeType">
+            <End Role="EntityAttributeType" EntitySet="EntityAttributeTypes" />
+            <End Role="TemplateEntityAttribute" EntitySet="TemplateEntityAttributes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectPath_LanguageType" Association="ProjManModel.FK_ProjectPath_LanguageType">
+            <End Role="LanguageType" EntitySet="LanguageTypes" />
+            <End Role="ProjectPath" EntitySet="ProjectPaths" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateEntityAttribute_Template" Association="ProjManModel.FK_TemplateEntityAttribute_Template">
+            <End Role="Template" EntitySet="Templates" />
+            <End Role="TemplateEntityAttribute" EntitySet="TemplateEntityAttributes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupMember_TemplateGroup" Association="ProjManModel.FK_TemplateGroupMember_TemplateGroup">
+            <End Role="TemplateGroup" EntitySet="TemplateGroups" />
+            <End Role="TemplateGroupMember" EntitySet="TemplateGroupMembers" />
+          </AssociationSet>
+          <EntitySet Name="TemplateGroupEntityAttributes" EntityType="ProjManModel.TemplateGroupEntityAttribute" />
+          <AssociationSet Name="FK_Template_CodeProjectType" Association="ProjManModel.FK_Template_CodeProjectType">
+            <End Role="CodeProjectType" EntitySet="CodeProjectTypes" />
+            <End Role="Template" EntitySet="Templates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupEntityAttribute_EntityAttributeType" Association="ProjManModel.FK_TemplateGroupEntityAttribute_EntityAttributeType">
+            <End Role="EntityAttributeType" EntitySet="EntityAttributeTypes" />
+            <End Role="TemplateGroupEntityAttribute" EntitySet="TemplateGroupEntityAttributes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Template_LanguageType" Association="ProjManModel.FK_Template_LanguageType">
+            <End Role="LanguageType" EntitySet="LanguageTypes" />
+            <End Role="Template" EntitySet="Templates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupMember_Template" Association="ProjManModel.FK_TemplateGroupMember_Template">
+            <End Role="Template" EntitySet="Templates" />
+            <End Role="TemplateGroupMember" EntitySet="TemplateGroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TemplateGroupEntityAttribute_TemplateGroup" Association="ProjManModel.FK_TemplateGroupEntityAttribute_TemplateGroup">
+            <End Role="TemplateGroup" EntitySet="TemplateGroups" />
+            <End Role="TemplateGroupEntityAttribute" EntitySet="TemplateGroupEntityAttributes" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Revision">
           <Key>
@@ -649,37 +902,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="PathType">
-          <Key>
-            <PropertyRef Name="PathTypeCode" />
-          </Key>
-          <Property Name="PathTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="PathTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="ProjectPaths" Relationship="ProjManModel.FK_ProjectPath_PathType" FromRole="PathType" ToRole="ProjectPath" />
-        </EntityType>
         <EntityType Name="ProjectPath">
           <Key>
             <PropertyRef Name="ProjectPathId" />
           </Key>
           <Property Name="ProjectPathId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProjectId" Type="Int32" Nullable="false" />
-          <Property Name="PathTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="Path" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="PathType" Relationship="ProjManModel.FK_ProjectPath_PathType" FromRole="ProjectPath" ToRole="PathType" />
           <NavigationProperty Name="Project" Relationship="ProjManModel.FK_ProjectPath_Project" FromRole="ProjectPath" ToRole="Project" />
+          <Property Name="CodeProjectTypeCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="LanguageTypeCode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CodeProjectType" Relationship="ProjManModel.FK_ProjectPath_CodeProjectType" FromRole="ProjectPath" ToRole="CodeProjectType" />
+          <NavigationProperty Name="LanguageType" Relationship="ProjManModel.FK_ProjectPath_LanguageType" FromRole="ProjectPath" ToRole="LanguageType" />
         </EntityType>
-        <Association Name="FK_ProjectPath_PathType">
-          <End Type="ProjManModel.PathType" Role="PathType" Multiplicity="1" />
-          <End Type="ProjManModel.ProjectPath" Role="ProjectPath" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PathType">
-              <PropertyRef Name="PathTypeCode" />
-            </Principal>
-            <Dependent Role="ProjectPath">
-              <PropertyRef Name="PathTypeCode" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProjectPath_Project">
           <End Type="ProjManModel.Project" Role="Project" Multiplicity="1" />
           <End Type="ProjManModel.ProjectPath" Role="ProjectPath" Multiplicity="*" />
@@ -698,6 +933,8 @@
           </Key>
           <Property Name="DataTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="DataTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NeedsLength" Type="Boolean" Nullable="false" />
+          <Property Name="NeedsScale" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="EntityChange">
           <Key>
@@ -933,6 +1170,207 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CodeProjectType">
+          <Key>
+            <PropertyRef Name="CodeProjectTypeCode" />
+          </Key>
+          <Property Name="CodeProjectTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="CodeProjectTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProjectPaths" Relationship="ProjManModel.FK_ProjectPath_CodeProjectType" FromRole="CodeProjectType" ToRole="ProjectPath" />
+          <NavigationProperty Name="Templates" Relationship="ProjManModel.FK_Template_CodeProjectType" FromRole="CodeProjectType" ToRole="Template" />
+        </EntityType>
+        <EntityType Name="EntityAttributeType">
+          <Key>
+            <PropertyRef Name="EntityAttributeTypeCode" />
+          </Key>
+          <Property Name="EntityAttributeTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="EntityAttributeTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TemplateEntityAttributes" Relationship="ProjManModel.FK_TemplateEntityAttribute_EntityAttributeType" FromRole="EntityAttributeType" ToRole="TemplateEntityAttribute" />
+          <NavigationProperty Name="TemplateGroupEntityAttributes" Relationship="ProjManModel.FK_TemplateGroupEntityAttribute_EntityAttributeType" FromRole="EntityAttributeType" ToRole="TemplateGroupEntityAttribute" />
+        </EntityType>
+        <EntityType Name="LanguageType">
+          <Key>
+            <PropertyRef Name="LanguageTypeCode" />
+          </Key>
+          <Property Name="LanguageTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="LanguageTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProjectPaths" Relationship="ProjManModel.FK_ProjectPath_LanguageType" FromRole="LanguageType" ToRole="ProjectPath" />
+          <NavigationProperty Name="Templates" Relationship="ProjManModel.FK_Template_LanguageType" FromRole="LanguageType" ToRole="Template" />
+        </EntityType>
+        <EntityType Name="Template">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FileMask" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PathMask" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CodeProjectTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="LanguageTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TemplateEntityAttributes" Relationship="ProjManModel.FK_TemplateEntityAttribute_Template" FromRole="Template" ToRole="TemplateEntityAttribute" />
+          <NavigationProperty Name="CodeProjectType" Relationship="ProjManModel.FK_Template_CodeProjectType" FromRole="Template" ToRole="CodeProjectType" />
+          <NavigationProperty Name="LanguageType" Relationship="ProjManModel.FK_Template_LanguageType" FromRole="Template" ToRole="LanguageType" />
+          <NavigationProperty Name="TemplateGroupMembers" Relationship="ProjManModel.FK_TemplateGroupMember_Template" FromRole="Template" ToRole="TemplateGroupMember" />
+        </EntityType>
+        <EntityType Name="TemplateEntityAttribute">
+          <Key>
+            <PropertyRef Name="TemplateEntityAttributeId" />
+          </Key>
+          <Property Name="TemplateEntityAttributeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateId" Type="Int32" Nullable="false" />
+          <Property Name="EntityAttributeTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EntityAttributeType" Relationship="ProjManModel.FK_TemplateEntityAttribute_EntityAttributeType" FromRole="TemplateEntityAttribute" ToRole="EntityAttributeType" />
+          <NavigationProperty Name="Template" Relationship="ProjManModel.FK_TemplateEntityAttribute_Template" FromRole="TemplateEntityAttribute" ToRole="Template" />
+        </EntityType>
+        <EntityType Name="TemplateGroup">
+          <Key>
+            <PropertyRef Name="TemplateGroupId" />
+          </Key>
+          <Property Name="TemplateGroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateGroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="TemplateGroupMembers" Relationship="ProjManModel.FK_TemplateGroupMember_TemplateGroup" FromRole="TemplateGroup" ToRole="TemplateGroupMember" />
+          <NavigationProperty Name="TemplateGroupEntityAttributes" Relationship="ProjManModel.FK_TemplateGroupEntityAttribute_TemplateGroup" FromRole="TemplateGroup" ToRole="TemplateGroupEntityAttribute" />
+        </EntityType>
+        <EntityType Name="TemplateGroupMember">
+          <Key>
+            <PropertyRef Name="TemplateGroupMemberId" />
+          </Key>
+          <Property Name="TemplateGroupMemberId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateGroupId" Type="Int32" Nullable="false" />
+          <Property Name="TemplateId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TemplateGroup" Relationship="ProjManModel.FK_TemplateGroupMember_TemplateGroup" FromRole="TemplateGroupMember" ToRole="TemplateGroup" />
+          <NavigationProperty Name="Template" Relationship="ProjManModel.FK_TemplateGroupMember_Template" FromRole="TemplateGroupMember" ToRole="Template" />
+        </EntityType>
+        <Association Name="FK_ProjectPath_CodeProjectType">
+          <End Type="ProjManModel.CodeProjectType" Role="CodeProjectType" Multiplicity="0..1" />
+          <End Type="ProjManModel.ProjectPath" Role="ProjectPath" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CodeProjectType">
+              <PropertyRef Name="CodeProjectTypeCode" />
+            </Principal>
+            <Dependent Role="ProjectPath">
+              <PropertyRef Name="CodeProjectTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateEntityAttribute_EntityAttributeType">
+          <End Type="ProjManModel.EntityAttributeType" Role="EntityAttributeType" Multiplicity="1" />
+          <End Type="ProjManModel.TemplateEntityAttribute" Role="TemplateEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityAttributeType">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Principal>
+            <Dependent Role="TemplateEntityAttribute">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectPath_LanguageType">
+          <End Type="ProjManModel.LanguageType" Role="LanguageType" Multiplicity="0..1" />
+          <End Type="ProjManModel.ProjectPath" Role="ProjectPath" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LanguageType">
+              <PropertyRef Name="LanguageTypeCode" />
+            </Principal>
+            <Dependent Role="ProjectPath">
+              <PropertyRef Name="LanguageTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateEntityAttribute_Template">
+          <End Type="ProjManModel.Template" Role="Template" Multiplicity="1" />
+          <End Type="ProjManModel.TemplateEntityAttribute" Role="TemplateEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="TemplateEntityAttribute">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupMember_TemplateGroup">
+          <End Type="ProjManModel.TemplateGroup" Role="TemplateGroup" Multiplicity="1" />
+          <End Type="ProjManModel.TemplateGroupMember" Role="TemplateGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TemplateGroup">
+              <PropertyRef Name="TemplateGroupId" />
+            </Principal>
+            <Dependent Role="TemplateGroupMember">
+              <PropertyRef Name="TemplateGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TemplateGroupEntityAttribute">
+          <Key>
+            <PropertyRef Name="TemplateGroupEntityAttributeId" />
+          </Key>
+          <Property Name="TemplateGroupEntityAttributeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EntityAttributeTypeCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TemplateGroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="EntityAttributeType" Relationship="ProjManModel.FK_TemplateGroupEntityAttribute_EntityAttributeType" FromRole="TemplateGroupEntityAttribute" ToRole="EntityAttributeType" />
+          <NavigationProperty Name="TemplateGroup" Relationship="ProjManModel.FK_TemplateGroupEntityAttribute_TemplateGroup" FromRole="TemplateGroupEntityAttribute" ToRole="TemplateGroup" />
+        </EntityType>
+        <Association Name="FK_Template_CodeProjectType">
+          <End Type="ProjManModel.CodeProjectType" Role="CodeProjectType" Multiplicity="1" />
+          <End Type="ProjManModel.Template" Role="Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CodeProjectType">
+              <PropertyRef Name="CodeProjectTypeCode" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="CodeProjectTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupEntityAttribute_EntityAttributeType">
+          <End Type="ProjManModel.EntityAttributeType" Role="EntityAttributeType" Multiplicity="1" />
+          <End Type="ProjManModel.TemplateGroupEntityAttribute" Role="TemplateGroupEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntityAttributeType">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Principal>
+            <Dependent Role="TemplateGroupEntityAttribute">
+              <PropertyRef Name="EntityAttributeTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Template_LanguageType">
+          <End Type="ProjManModel.LanguageType" Role="LanguageType" Multiplicity="1" />
+          <End Type="ProjManModel.Template" Role="Template" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LanguageType">
+              <PropertyRef Name="LanguageTypeCode" />
+            </Principal>
+            <Dependent Role="Template">
+              <PropertyRef Name="LanguageTypeCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupMember_Template">
+          <End Type="ProjManModel.Template" Role="Template" Multiplicity="1" />
+          <End Type="ProjManModel.TemplateGroupMember" Role="TemplateGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Template">
+              <PropertyRef Name="TemplateId" />
+            </Principal>
+            <Dependent Role="TemplateGroupMember">
+              <PropertyRef Name="TemplateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TemplateGroupEntityAttribute_TemplateGroup">
+          <End Type="ProjManModel.TemplateGroup" Role="TemplateGroup" Multiplicity="1" />
+          <End Type="ProjManModel.TemplateGroupEntityAttribute" Role="TemplateGroupEntityAttribute" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TemplateGroup">
+              <PropertyRef Name="TemplateGroupId" />
+            </Principal>
+            <Dependent Role="TemplateGroupEntityAttribute">
+              <PropertyRef Name="TemplateGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1002,19 +1440,12 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PathTypes">
-            <EntityTypeMapping TypeName="ProjManModel.PathType">
-              <MappingFragment StoreEntitySet="PathType">
-                <ScalarProperty Name="PathTypeName" ColumnName="PathTypeName" />
-                <ScalarProperty Name="PathTypeCode" ColumnName="PathTypeCode" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ProjectPaths">
             <EntityTypeMapping TypeName="ProjManModel.ProjectPath">
               <MappingFragment StoreEntitySet="ProjectPath">
+                <ScalarProperty Name="LanguageTypeCode" ColumnName="LanguageTypeCode" />
+                <ScalarProperty Name="CodeProjectTypeCode" ColumnName="CodeProjectTypeCode" />
                 <ScalarProperty Name="Path" ColumnName="Path" />
-                <ScalarProperty Name="PathTypeCode" ColumnName="PathTypeCode" />
                 <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
                 <ScalarProperty Name="ProjectPathId" ColumnName="ProjectPathId" />
               </MappingFragment>
@@ -1023,6 +1454,8 @@
           <EntitySetMapping Name="DataTypes">
             <EntityTypeMapping TypeName="ProjManModel.DataType">
               <MappingFragment StoreEntitySet="DataType">
+                <ScalarProperty Name="NeedsScale" ColumnName="NeedsScale" />
+                <ScalarProperty Name="NeedsLength" ColumnName="NeedsLength" />
                 <ScalarProperty Name="DataTypeName" ColumnName="DataTypeName" />
                 <ScalarProperty Name="DataTypeCode" ColumnName="DataTypeCode" />
               </MappingFragment>
@@ -1107,6 +1540,77 @@
               <MappingFragment StoreEntitySet="FieldChangeType">
                 <ScalarProperty Name="FieldChangeTypeName" ColumnName="FieldChangeTypeName" />
                 <ScalarProperty Name="FieldChangeTypeCode" ColumnName="FieldChangeTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CodeProjectTypes">
+            <EntityTypeMapping TypeName="ProjManModel.CodeProjectType">
+              <MappingFragment StoreEntitySet="CodeProjectType">
+                <ScalarProperty Name="CodeProjectTypeName" ColumnName="CodeProjectTypeName" />
+                <ScalarProperty Name="CodeProjectTypeCode" ColumnName="CodeProjectTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EntityAttributeTypes">
+            <EntityTypeMapping TypeName="ProjManModel.EntityAttributeType">
+              <MappingFragment StoreEntitySet="EntityAttributeType">
+                <ScalarProperty Name="EntityAttributeTypeName" ColumnName="EntityAttributeTypeName" />
+                <ScalarProperty Name="EntityAttributeTypeCode" ColumnName="EntityAttributeTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LanguageTypes">
+            <EntityTypeMapping TypeName="ProjManModel.LanguageType">
+              <MappingFragment StoreEntitySet="LanguageType">
+                <ScalarProperty Name="LanguageTypeName" ColumnName="LanguageTypeName" />
+                <ScalarProperty Name="LanguageTypeCode" ColumnName="LanguageTypeCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Templates">
+            <EntityTypeMapping TypeName="ProjManModel.Template">
+              <MappingFragment StoreEntitySet="Template">
+                <ScalarProperty Name="LanguageTypeCode" ColumnName="LanguageTypeCode" />
+                <ScalarProperty Name="CodeProjectTypeCode" ColumnName="CodeProjectTypeCode" />
+                <ScalarProperty Name="PathMask" ColumnName="PathMask" />
+                <ScalarProperty Name="FileMask" ColumnName="FileMask" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TemplateEntityAttributes">
+            <EntityTypeMapping TypeName="ProjManModel.TemplateEntityAttribute">
+              <MappingFragment StoreEntitySet="TemplateEntityAttribute">
+                <ScalarProperty Name="EntityAttributeTypeCode" ColumnName="EntityAttributeTypeCode" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="TemplateEntityAttributeId" ColumnName="TemplateEntityAttributeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TemplateGroups">
+            <EntityTypeMapping TypeName="ProjManModel.TemplateGroup">
+              <MappingFragment StoreEntitySet="TemplateGroup">
+                <ScalarProperty Name="TemplateGroupName" ColumnName="TemplateGroupName" />
+                <ScalarProperty Name="TemplateGroupId" ColumnName="TemplateGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TemplateGroupMembers">
+            <EntityTypeMapping TypeName="ProjManModel.TemplateGroupMember">
+              <MappingFragment StoreEntitySet="TemplateGroupMember">
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="TemplateGroupId" ColumnName="TemplateGroupId" />
+                <ScalarProperty Name="TemplateGroupMemberId" ColumnName="TemplateGroupMemberId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TemplateGroupEntityAttributes">
+            <EntityTypeMapping TypeName="ProjManModel.TemplateGroupEntityAttribute">
+              <MappingFragment StoreEntitySet="TemplateGroupEntityAttribute">
+                <ScalarProperty Name="TemplateGroupId" ColumnName="TemplateGroupId" />
+                <ScalarProperty Name="EntityAttributeTypeCode" ColumnName="EntityAttributeTypeCode" />
+                <ScalarProperty Name="TemplateGroupEntityAttributeId" ColumnName="TemplateGroupEntityAttributeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

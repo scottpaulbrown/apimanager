@@ -13,9 +13,7 @@
         <AssociationConnector Association="ProjManModel.FK_EntityField_Entity" ManuallyRouted="false" />
         <EntityTypeShape EntityType="ProjManModel.Revision" Width="1.5" PointX="3" PointY="5.5" />
         <AssociationConnector Association="ProjManModel.FK_Revision_Project" />
-        <EntityTypeShape EntityType="ProjManModel.PathType" Width="1.5" PointX="4.625" PointY="0.5" />
         <EntityTypeShape EntityType="ProjManModel.ProjectPath" Width="1.5" PointX="2.625" PointY="0.5" />
-        <AssociationConnector Association="ProjManModel.FK_ProjectPath_PathType" />
         <AssociationConnector Association="ProjManModel.FK_ProjectPath_Project" />
         <EntityTypeShape EntityType="ProjManModel.DataType" Width="1.5" PointX="5.375" PointY="5.75" />
         <EntityTypeShape EntityType="ProjManModel.EntityChange" Width="1.5" PointX="4.875" PointY="8.25" />
@@ -38,6 +36,24 @@
         <AssociationConnector Association="ProjManModel.FK_FieldChange_FieldChangeType" />
         <AssociationConnector Association="ProjManModel.FK_FieldChange_EntityField" />
         <AssociationConnector Association="ProjManModel.FK_FieldChange_Revision" />
+        <EntityTypeShape EntityType="ProjManModel.CodeProjectType" Width="1.5" PointX="0.75" PointY="16.125" />
+        <EntityTypeShape EntityType="ProjManModel.EntityAttributeType" Width="1.5" PointX="12.75" PointY="8.375" />
+        <EntityTypeShape EntityType="ProjManModel.LanguageType" Width="1.5" PointX="5.75" PointY="12.875" />
+        <EntityTypeShape EntityType="ProjManModel.Template" Width="1.5" PointX="12.75" PointY="1" />
+        <EntityTypeShape EntityType="ProjManModel.TemplateEntityAttribute" Width="1.5" PointX="15" PointY="1.125" />
+        <EntityTypeShape EntityType="ProjManModel.TemplateGroup" Width="1.5" PointX="0.75" PointY="13" />
+        <EntityTypeShape EntityType="ProjManModel.TemplateGroupMember" Width="1.5" PointX="3" PointY="12.875" />
+        <AssociationConnector Association="ProjManModel.FK_ProjectPath_CodeProjectType" />
+        <AssociationConnector Association="ProjManModel.FK_TemplateEntityAttribute_EntityAttributeType" />
+        <AssociationConnector Association="ProjManModel.FK_ProjectPath_LanguageType" />
+        <AssociationConnector Association="ProjManModel.FK_TemplateEntityAttribute_Template" />
+        <AssociationConnector Association="ProjManModel.FK_TemplateGroupMember_TemplateGroup" />
+        <EntityTypeShape EntityType="ProjManModel.TemplateGroupEntityAttribute" Width="1.5" PointX="15" PointY="10.625" />
+        <AssociationConnector Association="ProjManModel.FK_Template_CodeProjectType" />
+        <AssociationConnector Association="ProjManModel.FK_TemplateGroupEntityAttribute_EntityAttributeType" />
+        <AssociationConnector Association="ProjManModel.FK_Template_LanguageType" />
+        <AssociationConnector Association="ProjManModel.FK_TemplateGroupMember_Template" />
+        <AssociationConnector Association="ProjManModel.FK_TemplateGroupEntityAttribute_TemplateGroup" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
